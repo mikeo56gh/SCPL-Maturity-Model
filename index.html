@@ -7,207 +7,174 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #ffffff;
-    --bg2: #f7f7f5;
-    --bg3: #f0efeb;
-    --text: #1a1a18;
-    --text2: #6b6b67;
-    --text3: #9a9a96;
-    --border: rgba(0,0,0,0.10);
-    --border2: rgba(0,0,0,0.18);
-    --radius: 10px;
-    --radius-sm: 6px;
-    --danger: #a32d2d;
-    --danger-bg: #fcebeb;
-    --info: #185fa5;
-    --info-bg: #e6f1fb;
-    --success: #0f6e56;
-    --success-bg: #e1f5ee;
-    --warning: #854f0b;
-    --warning-bg: #faeeda;
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efeb;
+    --text: #1a1a18; --text2: #6b6b67; --text3: #9a9a96;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+    --radius: 10px; --radius-sm: 6px;
+    --danger: #a32d2d; --danger-bg: #fcebeb;
+    --info: #185fa5; --info-bg: #e6f1fb;
+    --success: #0f6e56; --success-bg: #e1f5ee;
+    --warning: #854f0b; --warning-bg: #faeeda;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1c1c1a;
-      --bg2: #252522;
-      --bg3: #2e2e2b;
-      --text: #f0efeb;
-      --text2: #9a9a96;
-      --text3: #6b6b67;
-      --border: rgba(255,255,255,0.10);
-      --border2: rgba(255,255,255,0.18);
-      --danger: #f09595;
-      --danger-bg: #3a1515;
-      --info: #85b7eb;
-      --info-bg: #0c2540;
-      --success: #5dcaa5;
-      --success-bg: #04201a;
-      --warning: #ef9f27;
-      --warning-bg: #2a1a04;
+      --bg: #1c1c1a; --bg2: #252522; --bg3: #2e2e2b;
+      --text: #f0efeb; --text2: #9a9a96; --text3: #6b6b67;
+      --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
+      --danger: #f09595; --danger-bg: #3a1515;
+      --info: #85b7eb; --info-bg: #0c2540;
+      --success: #5dcaa5; --success-bg: #04201a;
+      --warning: #ef9f27; --warning-bg: #2a1a04;
     }
   }
-  html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg3); color: var(--text); font-size: 16px; line-height: 1.6; }
-  .page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem 4rem; }
-  .container { width: 100%; max-width: 580px; }
-  .container.wide { max-width: 720px; }
-  .screen { display: none; }
-  .screen.active { display: block; }
-  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
-  h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-  h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .muted { color: var(--text2); font-size: 14px; }
-  .small { font-size: 13px; color: var(--text3); }
-
-  /* Logo / header */
-  .site-header { text-align: center; margin-bottom: 2rem; padding-top: 1rem; }
-  .site-header .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
-  .logo-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--text); display: flex; align-items: center; justify-content: center; }
-  .logo-icon svg { width: 20px; height: 20px; fill: var(--bg); }
-  .site-header h1 { font-size: 20px; }
-
-  /* Cards */
-  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
-  .card-sm { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
-
-  /* Forms */
-  .form-group { margin-bottom: 1.25rem; }
-  label.field-label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 6px; font-weight: 500; }
-  select, input[type=password], textarea {
-    width: 100%; padding: 10px 12px; border: 0.5px solid var(--border2);
-    border-radius: var(--radius-sm); font-size: 15px; font-family: inherit;
-    background: var(--bg); color: var(--text); transition: border-color 0.15s;
-    appearance: none; -webkit-appearance: none;
-  }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-  select:focus, input[type=password]:focus, textarea:focus { outline: none; border-color: var(--text); }
-  .error-msg { color: var(--danger); font-size: 13px; margin-top: 6px; display: none; }
-
-  /* Buttons */
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: transparent; color: var(--text); font-size: 14px; font-family: inherit; cursor: pointer; transition: background 0.15s, opacity 0.15s; }
-  .btn:hover { background: var(--bg2); }
-  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
-  .btn.primary:hover { opacity: 0.85; }
-  .btn.danger { color: var(--danger); border-color: var(--border); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-  .btn-full { width: 100%; }
-
-  /* Progress */
-  .progress-wrap { margin-bottom: 1.5rem; }
-  .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text2); margin-bottom: 6px; }
-  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--text); border-radius: 2px; transition: width 0.35s ease; }
-
-  /* Section badge */
-  .section-tag { display: inline-block; padding: 3px 10px; background: var(--bg2); border-radius: 20px; font-size: 12px; color: var(--text2); margin-bottom: 0.75rem; border: 0.5px solid var(--border); }
-
-  /* Choices */
-  .choices { display: flex; flex-direction: column; gap: 8px; margin-top: 1.25rem; }
-  .choice {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 14px; border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm); cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    user-select: none;
-  }
-  .choice:hover { background: var(--bg2); border-color: var(--border2); }
-  .choice.selected { border-color: var(--text); background: var(--bg2); }
-  .choice-num {
-    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 600; margin-top: 1px;
-    border: 0.5px solid var(--border2); background: var(--bg);
-    color: var(--text2); transition: background 0.15s, color 0.15s;
-  }
-  .choice.selected .choice-num { background: var(--text); color: var(--bg); border-color: var(--text); }
-  .choice-label { font-size: 14px; line-height: 1.55; padding-top: 2px; }
-
-  /* Nav row */
-  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; gap: 10px; }
-
-  /* Badges */
-  .badge { display: inline-block; padding: 3px 10px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; }
-  .badge-scpl { background: #e6f1fb; color: #185fa5; }
-  .badge-bpmma { background: #eaf3de; color: #3b6d11; }
-  .badge-pxe { background: #faeeda; color: #854f0b; }
-
-  /* Hudson level badges */
-  .level-badge { display: inline-block; padding: 5px 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
-
-  /* Metrics */
-  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; margin-bottom: 1rem; }
-  .metric { background: var(--bg2); border-radius: var(--radius-sm); padding: 1rem; }
-  .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-  .metric .m-value { font-size: 24px; font-weight: 600; }
-  .metric .m-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-  /* Dim rows */
-  .dim-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; gap: 12px; }
-  .dim-row:last-child { border-bottom: none; }
-  .bar-wrap { width: 90px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
-  .bar-fill { height: 100%; background: var(--text); border-radius: 3px; }
-
-  /* Tabs */
-  .tabs { display: flex; border-bottom: 0.5px solid var(--border); margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .tab-btn { padding: 9px 16px; font-size: 13px; font-family: inherit; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text2); cursor: pointer; transition: color 0.15s; }
-  .tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* Respondent rows */
-  .resp-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; gap: 10px; }
-  .resp-row:last-child { border-bottom: none; }
-
-  /* Comment items */
-  .comment-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
-  .comment-item:last-child { border-bottom: none; }
-  .comment-meta { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-  .comment-body { font-size: 14px; line-height: 1.55; }
-
-  /* Spinner */
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--text); border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Alert */
-  .alert { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 14px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-  .alert-info { background: var(--info-bg); color: var(--info); }
-
-  /* Thank you checkmark */
-  .checkmark { width: 60px; height: 60px; border-radius: 50%; background: var(--success-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-  .checkmark svg { width: 28px; height: 28px; stroke: var(--success); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* Scale legend */
-  .scale-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .scale-pip { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
-
-  /* Filter row */
-  .filter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  .filter-row label { font-size: 13px; color: var(--text2); white-space: nowrap; }
-  .filter-row select { max-width: 160px; font-size: 13px; padding: 7px 32px 7px 10px; }
-
-  /* Admin top bar */
-  .admin-topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 10px; }
-  .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  /* Stored data notice */
-  .storage-notice { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--text2); margin-bottom: 1rem; }
-
-  @media (max-width: 480px) {
-    .page { padding: 1rem 0.75rem 3rem; }
-    .card { padding: 1.25rem 1rem; }
-    h1 { font-size: 18px; }
-  }
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);font-size:16px;line-height:1.6;}
+  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem;}
+  .container{width:100%;max-width:580px;}
+  .container.wide{max-width:740px;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+  h2{font-size:18px;font-weight:600;margin-bottom:4px;}
+  h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+  .muted{color:var(--text2);font-size:14px;}
+  .small{font-size:13px;color:var(--text3);}
+  .site-header{text-align:center;margin-bottom:2rem;padding-top:1rem;}
+  .logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:0.75rem;}
+  .logo-icon{width:36px;height:36px;border-radius:8px;background:var(--text);display:flex;align-items:center;justify-content:center;}
+  .logo-icon svg{width:20px;height:20px;fill:var(--bg);}
+  .card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+  .form-group{margin-bottom:1.25rem;}
+  label.field-label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
+  select,input[type=password],textarea{width:100%;padding:10px 12px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;background:var(--bg);color:var(--text);transition:border-color 0.15s;appearance:none;-webkit-appearance:none;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  select:focus,input[type=password]:focus,textarea:focus{outline:none;border-color:var(--text);}
+  .error-msg{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;transition:background 0.15s,opacity 0.15s;}
+  .btn:hover{background:var(--bg2);}
+  .btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+  .btn.primary:hover{opacity:0.85;}
+  .btn.danger{color:var(--danger);border-color:var(--border);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none;}
+  .btn-full{width:100%;}
+  .progress-wrap{margin-bottom:1.5rem;}
+  .progress-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);margin-bottom:6px;}
+  .progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--text);border-radius:2px;transition:width 0.35s ease;}
+  .section-tag{display:inline-block;padding:3px 10px;background:var(--bg2);border-radius:20px;font-size:12px;color:var(--text2);margin-bottom:0.75rem;border:0.5px solid var(--border);}
+  .choices{display:flex;flex-direction:column;gap:8px;margin-top:1.25rem;}
+  .choice{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:0.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none;}
+  .choice:hover{background:var(--bg2);border-color:var(--border2);}
+  .choice.selected{border-color:var(--text);background:var(--bg2);}
+  .choice-num{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:1px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);transition:background 0.15s,color 0.15s;}
+  .choice.selected .choice-num{background:var(--text);color:var(--bg);border-color:var(--text);}
+  .choice-label{font-size:14px;line-height:1.55;padding-top:2px;}
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem;gap:10px;}
+  .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px;margin-bottom:1rem;}
+  .metric{background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;}
+  .metric .m-label{font-size:12px;color:var(--text2);margin-bottom:4px;}
+  .metric .m-value{font-size:24px;font-weight:600;}
+  .metric .m-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+  .dim-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:14px;gap:12px;}
+  .dim-row:last-child{border-bottom:none;}
+  .bar-wrap{width:90px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;flex-shrink:0;}
+  .bar-fill{height:100%;background:var(--text);border-radius:3px;}
+  .tabs{display:flex;border-bottom:0.5px solid var(--border);margin-bottom:1.25rem;flex-wrap:wrap;}
+  .tab-btn{padding:9px 16px;font-size:13px;font-family:inherit;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);cursor:pointer;transition:color 0.15s;}
+  .tab-btn.active{color:var(--text);border-bottom-color:var(--text);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .resp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:10px;}
+  .resp-row:last-child{border-bottom:none;}
+  .comment-item{padding:10px 0;border-bottom:0.5px solid var(--border);}
+  .comment-item:last-child{border-bottom:none;}
+  .comment-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
+  .comment-body{font-size:14px;line-height:1.55;}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+  .alert-info{background:var(--info-bg);color:var(--info);}
+  .alert-danger{background:var(--danger-bg);color:var(--danger);}
+  .checkmark{width:60px;height:60px;border-radius:50%;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+  .checkmark svg{width:28px;height:28px;stroke:var(--success);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .filter-row{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+  .filter-row label{font-size:13px;color:var(--text2);white-space:nowrap;}
+  .filter-row select{max-width:160px;font-size:13px;padding:7px 32px 7px 10px;}
+  .admin-topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;}
+  .admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .setup-step{display:flex;gap:12px;margin-bottom:1.25rem;}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px;}
+  .step-body h3{font-size:15px;margin-bottom:4px;}
+  .step-body p{font-size:13px;color:var(--text2);line-height:1.6;}
+  code{background:var(--bg2);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--text);border:0.5px solid var(--border);}
+  @media(max-width:480px){.page{padding:1rem 0.75rem 3rem;}.card{padding:1.25rem 1rem;}}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- LOGIN -->
-  <div id="screen-login" class="screen active container">
+  <!-- SETUP SCREEN -->
+  <div id="screen-setup" class="screen container">
     <div class="site-header">
       <div class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg>
+        <div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div>
+        <span style="font-size:17px;font-weight:700;">Safety culture survey</span>
+      </div>
+      <p class="muted">Setup required before the survey can be used</p>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:1.25rem;">Connect to Supabase</h2>
+      <div class="setup-step">
+        <div class="step-num">1</div>
+        <div class="step-body"><h3>Create a Supabase project</h3><p>Go to <strong>supabase.com</strong>, sign up free, and create a new project. Note down your project URL and anon key from <strong>Project Settings → API</strong>.</p></div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">2</div>
+        <div class="step-body"><h3>Create the database table</h3><p>In Supabase go to <strong>SQL Editor</strong> and run this query:</p>
+          <pre style="background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;overflow-x:auto;margin-top:8px;line-height:1.6;">create table survey_responses (
+  id bigint generated always as identity primary key,
+  created_at timestamptz default now(),
+  team text not null,
+  avg_score numeric not null,
+  dim_avgs jsonb,
+  answers jsonb,
+  comment text
+);
+
+alter table survey_responses enable row level security;
+
+create policy "Allow insert" on survey_responses
+  for insert with check (true);
+
+create policy "Allow select" on survey_responses
+  for select using (true);
+
+create policy "Allow delete" on survey_responses
+  for delete using (true);</pre>
         </div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">3</div>
+        <div class="step-body"><h3>Add your credentials to this file</h3><p>Open this HTML file in any text editor (Notepad, TextEdit, VS Code). Find the section near the top of the <code>&lt;script&gt;</code> that says <code>SUPABASE CONFIGURATION</code> and replace the two placeholder values with your URL and anon key. Save the file.</p></div>
+      </div>
+      <div class="setup-step">
+        <div class="step-num">4</div>
+        <div class="step-body"><h3>Deploy to Vercel</h3><p>Rename the file to <code>index.html</code>, put it in a folder, and drag that folder to <strong>vercel.com/new</strong>. Your survey will be live at a <code>yourname.vercel.app</code> URL.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALREADY SUBMITTED -->
+  <div id="screen-already" class="screen container" style="text-align:center;padding-top:2rem;">
+    <div style="width:60px;height:60px;border-radius:50%;background:var(--warning-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:26px;">&#9888;</div>
+    <h2>Already submitted</h2>
+    <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">It looks like you've already completed this survey on this device. Only one submission per person is allowed.</p>
+    <p class="muted" style="margin-top:10px;max-width:380px;margin-left:auto;margin-right:auto;font-size:13px;">If you believe this is an error, please contact your survey administrator.</p>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="screen-login" class="screen container">
+    <div class="site-header">
+      <div class="logo">
+        <div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div>
         <span style="font-size:17px;font-weight:700;">Safety culture survey</span>
       </div>
       <p class="muted">Hudson maturity model &nbsp;·&nbsp; Confidential</p>
@@ -235,10 +202,7 @@
   <!-- SURVEY -->
   <div id="screen-survey" class="screen container">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-      <div>
-        <h2>Safety culture survey</h2>
-        <p class="muted" id="survey-team-label"></p>
-      </div>
+      <div><h2>Safety culture survey</h2><p class="muted" id="survey-team-label"></p></div>
       <span class="small" id="q-counter" style="white-space:nowrap;"></span>
     </div>
     <div class="progress-wrap">
@@ -267,6 +231,7 @@
         <textarea id="comment-text" rows="6" placeholder="What's working well? What could be better? Any safety concerns you'd like to highlight..."></textarea>
       </div>
     </div>
+    <div id="submit-error" class="alert alert-danger" style="display:none;"></div>
     <div class="nav-row">
       <button class="btn" id="btn-back-to-survey">&#8592; Back</button>
       <button class="btn primary" id="btn-submit">Submit survey</button>
@@ -275,9 +240,7 @@
 
   <!-- THANK YOU -->
   <div id="screen-thankyou" class="screen container" style="text-align:center;padding-top:2rem;">
-    <div class="checkmark">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    </div>
+    <div class="checkmark"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
     <h2>Thank you</h2>
     <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">Your responses have been recorded. Results are kept confidential — only aggregated team data is reported.</p>
     <div class="card" style="margin-top:1.5rem;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;">
@@ -292,21 +255,15 @@
   <!-- ADMIN -->
   <div id="screen-admin" class="screen wide container">
     <div class="admin-topbar">
-      <div>
-        <h2>Admin report</h2>
-        <p class="muted">Hudson safety culture maturity</p>
-      </div>
+      <div><h2>Admin report</h2><p class="muted">Hudson safety culture maturity</p></div>
       <div class="admin-actions">
         <button class="btn" id="btn-refresh">&#8635; Refresh</button>
-        <button class="btn danger" id="btn-clear">Reset all data</button>
+        <button class="btn" id="btn-export">&#8681; Export CSV</button>
+        <button class="btn danger" id="btn-clear">Reset data</button>
+        <button class="btn" id="btn-clear-lock" title="Use this to allow a specific device to resubmit">Clear my lock</button>
         <button class="btn" id="btn-logout">Log out</button>
       </div>
     </div>
-
-    <div class="storage-notice">
-      &#128274;&nbsp; Responses are stored in your browser's local storage on this device. To share results across devices, export the data below.
-    </div>
-
     <div class="filter-row">
       <label>Filter by team:</label>
       <select id="filter-team">
@@ -315,11 +272,9 @@
         <option value="BP MMA">BP MMA</option>
         <option value="PXE">PXE</option>
       </select>
-      <button class="btn" id="btn-export" style="font-size:13px;padding:7px 14px;">&#8681; Export CSV</button>
     </div>
-
     <div id="admin-loading" class="alert alert-info"><span class="spinner"></span>&nbsp; Loading responses...</div>
-
+    <div id="admin-error" class="alert alert-danger" style="display:none;"></div>
     <div id="admin-content" style="display:none;">
       <div class="tabs">
         <button class="tab-btn active" data-tab="overview">Overview</button>
@@ -327,7 +282,6 @@
         <button class="tab-btn" data-tab="respondents">Respondents</button>
         <button class="tab-btn" data-tab="comments">Comments</button>
       </div>
-
       <div id="tab-overview" class="tab-panel active"></div>
       <div id="tab-dimensions" class="tab-panel"></div>
       <div id="tab-respondents" class="tab-panel"></div>
@@ -335,34 +289,34 @@
     </div>
   </div>
 
-</div><!-- end .page -->
+</div>
 
 <script>
-// ─── Config ───────────────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════
+//  SUPABASE CONFIGURATION
+//  Replace these two values after setting up Supabase
+// ════════════════════════════════════════════════════
+const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_URL_HERE';
+const SUPABASE_KEY = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
+const TABLE_NAME   = 'survey_responses';
+// ════════════════════════════════════════════════════
+
 const SURVEY_PASS = 'safety2024';
 const ADMIN_PASS  = 'admin2024';
-const LS_KEY      = 'hudson_survey_responses_v1';
 
-const TEAMS = ['SCPL', 'BP MMA', 'PXE'];
-
+const TEAMS = ['SCPL','BP MMA','PXE'];
 const TEAM_STYLE = {
-  'SCPL':   { bg:'#e6f1fb', color:'#185fa5' },
-  'BP MMA': { bg:'#eaf3de', color:'#3b6d11' },
-  'PXE':    { bg:'#faeeda', color:'#854f0b' },
+  'SCPL':   {bg:'#e6f1fb',color:'#185fa5'},
+  'BP MMA': {bg:'#eaf3de',color:'#3b6d11'},
+  'PXE':    {bg:'#faeeda',color:'#854f0b'},
 };
-
 const SECTIONS = [
-  'Leadership and commitment',
-  'Workforce engagement',
-  'Risk management and hazard awareness',
-  'Learning and improvement',
-  'Reporting culture',
-  'Procedures and operational discipline',
-  'Competence and training',
-  'Contractor and partner management',
+  'Leadership and commitment','Workforce engagement',
+  'Risk management and hazard awareness','Learning and improvement',
+  'Reporting culture','Procedures and operational discipline',
+  'Competence and training','Contractor and partner management',
   'Continuous improvement',
 ];
-
 const QUESTIONS = [
   {id:1,s:0,title:'How leadership prioritises safety',choices:['Production or cost takes priority over safety.','Safety discussed after incidents.','Leaders track safety KPIs and require compliance.','Leaders visibly lead safety improvement.','Safety drives operational decisions across the business.']},
   {id:2,s:0,title:'Leadership visibility',choices:['Leaders rarely visit operational areas.','Leaders visit after incidents or audits.','Leaders conduct scheduled safety walks.','Leaders actively engage with workers on hazards.','Leaders use field presence to remove risk and improve systems.']},
@@ -396,393 +350,305 @@ const QUESTIONS = [
   {id:30,s:8,title:'Improvement culture',choices:['Improvement occurs after accidents.','Improvement driven by regulator or audit findings.','Improvement programmes implemented.','Teams proactively improve systems.','Continuous improvement embedded across the organisation.']}
 ];
 
-// ─── State ────────────────────────────────────────────────────────────────────
-let state = { team:'', isAdmin:false, questions:[], answers:{}, idx:0 };
-let allResponses = [];
+// ── Supabase helpers ──────────────────────────────────────────────────────────
+const isConfigured = () =>
+  SUPABASE_URL !== 'PASTE_YOUR_SUPABASE_URL_HERE' &&
+  SUPABASE_KEY !== 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+async function dbInsert(row) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},
+    body: JSON.stringify(row)
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+async function dbFetch() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&order=created_at.asc`, {
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+async function dbDeleteAll() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=gte.0`, {
+    method:'DELETE',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
 function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
-
 function hudsonLevel(score) {
-  if (score < 2)   return {label:'Pathological', color:'#a32d2d', bg:'#fcebeb'};
-  if (score < 3)   return {label:'Reactive',     color:'#854f0b', bg:'#faeeda'};
-  if (score < 4)   return {label:'Calculative',  color:'#185fa5', bg:'#e6f1fb'};
-  if (score < 4.5) return {label:'Proactive',    color:'#3b6d11', bg:'#eaf3de'};
-  return              {label:'Generative',    color:'#0f6e56', bg:'#e1f5ee'};
+  if(score<2)   return{label:'Pathological',color:'#a32d2d',bg:'#fcebeb'};
+  if(score<3)   return{label:'Reactive',    color:'#854f0b',bg:'#faeeda'};
+  if(score<4)   return{label:'Calculative', color:'#185fa5',bg:'#e6f1fb'};
+  if(score<4.5) return{label:'Proactive',   color:'#3b6d11',bg:'#eaf3de'};
+  return              {label:'Generative',  color:'#0f6e56',bg:'#e1f5ee'};
 }
-
-function teamBadge(team) {
-  const s = TEAM_STYLE[team] || {bg:'#f0efeb',color:'#5f5e5a'};
+function teamBadge(team){
+  const s=TEAM_STYLE[team]||{bg:'#f0efeb',color:'#5f5e5a'};
   return `<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:${s.bg};color:${s.color};">${team}</span>`;
 }
-
-function levelBadge(score) {
-  const l = hudsonLevel(score);
+function levelBadge(score){
+  const l=hudsonLevel(score);
   return `<span style="display:inline-block;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:600;background:${l.bg};color:${l.color};">${l.label} · ${score.toFixed(2)}</span>`;
 }
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-// ─── Storage ──────────────────────────────────────────────────────────────────
-function saveResponse(entry) {
-  const existing = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-  existing.push(entry);
-  localStorage.setItem(LS_KEY, JSON.stringify(existing));
+// ── State ─────────────────────────────────────────────────────────────────────
+let state={team:'',isAdmin:false,questions:[],answers:{},idx:0};
+let allResponses=[];
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+const LS_SUBMITTED = 'hudson_survey_submitted_v1';
+
+function hasSubmitted() {
+  return localStorage.getItem(LS_SUBMITTED) === 'yes';
 }
 
-function loadResponses() {
-  return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+function markSubmitted() {
+  localStorage.setItem(LS_SUBMITTED, 'yes');
 }
 
-// ─── Login ────────────────────────────────────────────────────────────────────
-document.getElementById('btn-login').addEventListener('click', () => {
-  const team = document.getElementById('login-team').value;
-  const pass = document.getElementById('login-pass').value.trim();
-  const err  = document.getElementById('login-error');
+window.addEventListener('DOMContentLoaded',()=>{
+  if (!isConfigured()) { showScreen('setup'); return; }
+  showScreen('login');
+});
 
-  if (!team) { err.textContent = 'Please select your team.'; err.style.display = 'block'; return; }
-
-  if (pass === ADMIN_PASS) {
-    state.team = team; state.isAdmin = true;
-    err.style.display = 'none';
-    showScreen('admin');
-    loadAdminView();
-  } else if (pass === SURVEY_PASS) {
-    state.team = team; state.isAdmin = false;
-    state.answers = {}; state.idx = 0;
-    state.questions = shuffle(QUESTIONS);
-    err.style.display = 'none';
-    document.getElementById('survey-team-label').textContent = 'Team: ' + team;
-    renderQ();
-    showScreen('survey');
+// ── Login ─────────────────────────────────────────────────────────────────────
+document.getElementById('btn-login').addEventListener('click',()=>{
+  const team=document.getElementById('login-team').value;
+  const pass=document.getElementById('login-pass').value.trim();
+  const err=document.getElementById('login-error');
+  if(!team){err.textContent='Please select your team.';err.style.display='block';return;}
+  if(pass===ADMIN_PASS){
+    state.team=team;state.isAdmin=true;err.style.display='none';
+    showScreen('admin');loadAdminView();
+  } else if(pass===SURVEY_PASS){
+    if(hasSubmitted()){err.style.display='none';showScreen('already');return;}
+    state.team=team;state.isAdmin=false;
+    state.answers={};state.idx=0;
+    state.questions=shuffle(QUESTIONS);
+    err.style.display='none';
+    document.getElementById('survey-team-label').textContent='Team: '+team;
+    renderQ();showScreen('survey');
   } else {
-    err.textContent = 'Incorrect passcode. Please try again.';
-    err.style.display = 'block';
+    err.textContent='Incorrect passcode. Please try again.';err.style.display='block';
   }
 });
-document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('btn-login').click(); });
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn-login').click();});
 
-// ─── Survey ───────────────────────────────────────────────────────────────────
-function renderQ() {
-  const q     = state.questions[state.idx];
-  const total = state.questions.length;
-  const pct   = Math.round((state.idx+1)/total*100);
-
-  document.getElementById('q-counter').textContent      = (state.idx+1) + ' of ' + total;
-  document.getElementById('progress-fill').style.width  = pct + '%';
-  document.getElementById('progress-section').textContent = SECTIONS[q.s];
-  document.getElementById('progress-pct').textContent   = pct + '%';
-  document.getElementById('q-section-tag').textContent  = SECTIONS[q.s];
-  document.getElementById('q-title').textContent        = q.title;
-  document.getElementById('warn-unanswered').style.display = 'none';
-  document.getElementById('btn-prev').disabled = state.idx === 0;
-
-  const list = document.getElementById('choices');
-  list.innerHTML = '';
-  const chosen = state.answers[q.id];
-
-  q.choices.forEach((text, i) => {
-    const score = i + 1;
-    const div = document.createElement('div');
-    div.className = 'choice' + (chosen === score ? ' selected' : '');
-    div.innerHTML = `<div class="choice-num">${score}</div><div class="choice-label">${text}</div>`;
-    div.addEventListener('click', () => {
-      state.answers[q.id] = score;
-      list.querySelectorAll('.choice').forEach(c => {
-        c.classList.remove('selected');
-        c.querySelector('.choice-num').style.cssText = '';
-      });
+// ── Survey ────────────────────────────────────────────────────────────────────
+function renderQ(){
+  const q=state.questions[state.idx];
+  const total=state.questions.length;
+  const pct=Math.round((state.idx+1)/total*100);
+  document.getElementById('q-counter').textContent=(state.idx+1)+' of '+total;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-section').textContent=SECTIONS[q.s];
+  document.getElementById('progress-pct').textContent=pct+'%';
+  document.getElementById('q-section-tag').textContent=SECTIONS[q.s];
+  document.getElementById('q-title').textContent=q.title;
+  document.getElementById('warn-unanswered').style.display='none';
+  document.getElementById('btn-prev').disabled=state.idx===0;
+  const list=document.getElementById('choices');
+  list.innerHTML='';
+  const chosen=state.answers[q.id];
+  q.choices.forEach((text,i)=>{
+    const score=i+1;
+    const div=document.createElement('div');
+    div.className='choice'+(chosen===score?' selected':'');
+    div.innerHTML=`<div class="choice-num">${score}</div><div class="choice-label">${text}</div>`;
+    div.addEventListener('click',()=>{
+      state.answers[q.id]=score;
+      list.querySelectorAll('.choice').forEach(c=>{c.classList.remove('selected');c.querySelector('.choice-num').style.cssText='';});
       div.classList.add('selected');
-      div.querySelector('.choice-num').style.background = 'var(--text)';
-      div.querySelector('.choice-num').style.color = 'var(--bg)';
-      div.querySelector('.choice-num').style.borderColor = 'var(--text)';
-      document.getElementById('warn-unanswered').style.display = 'none';
+      const n=div.querySelector('.choice-num');
+      n.style.background='var(--text)';n.style.color='var(--bg)';n.style.borderColor='var(--text)';
+      document.getElementById('warn-unanswered').style.display='none';
     });
     list.appendChild(div);
   });
 }
+document.getElementById('btn-next').addEventListener('click',()=>{
+  const q=state.questions[state.idx];
+  if(!state.answers[q.id]){document.getElementById('warn-unanswered').style.display='block';return;}
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}
+  else showScreen('comment');
+});
+document.getElementById('btn-prev').addEventListener('click',()=>{if(state.idx>0){state.idx--;renderQ();}});
+document.getElementById('btn-back-to-survey').addEventListener('click',()=>{state.idx=state.questions.length-1;renderQ();showScreen('survey');});
 
-document.getElementById('btn-next').addEventListener('click', () => {
-  const q = state.questions[state.idx];
-  if (!state.answers[q.id]) {
-    document.getElementById('warn-unanswered').style.display = 'block';
-    return;
+// ── Submit ────────────────────────────────────────────────────────────────────
+document.getElementById('btn-submit').addEventListener('click',async()=>{
+  const btn=document.getElementById('btn-submit');
+  const errEl=document.getElementById('submit-error');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving...';errEl.style.display='none';
+  const comment=document.getElementById('comment-text').value.trim();
+  const scores=Object.values(state.answers);
+  const avg=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const dimScores={};
+  state.questions.forEach(q=>{if(!dimScores[q.s])dimScores[q.s]=[];dimScores[q.s].push(state.answers[q.id]||3);});
+  const dimAvgs={};
+  Object.keys(dimScores).forEach(k=>{dimAvgs[k]=dimScores[k].reduce((a,b)=>a+b,0)/dimScores[k].length;});
+  try{
+    await dbInsert({team:state.team,avg_score:parseFloat(avg.toFixed(4)),dim_avgs:dimAvgs,answers:state.answers,comment:comment||null});
+    markSubmitted();
+    const lvl=hudsonLevel(avg);
+    document.getElementById('ty-score').textContent=avg.toFixed(2);
+    document.getElementById('ty-level').textContent=lvl.label;
+    showScreen('thankyou');
+  }catch(e){
+    errEl.textContent='Could not save your response. Please check your connection and try again. ('+e.message+')';
+    errEl.style.display='flex';
   }
-  if (state.idx < state.questions.length - 1) {
-    state.idx++;
-    renderQ();
-  } else {
-    showScreen('comment');
-  }
+  btn.disabled=false;btn.innerHTML='Submit survey';
 });
-
-document.getElementById('btn-prev').addEventListener('click', () => {
-  if (state.idx > 0) { state.idx--; renderQ(); }
-});
-
-document.getElementById('btn-back-to-survey').addEventListener('click', () => {
-  state.idx = state.questions.length - 1;
-  renderQ();
-  showScreen('survey');
-});
-
-// ─── Submit ───────────────────────────────────────────────────────────────────
-document.getElementById('btn-submit').addEventListener('click', () => {
-  const btn = document.getElementById('btn-submit');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Saving...';
-
-  const comment = document.getElementById('comment-text').value.trim();
-  const scores  = Object.values(state.answers);
-  const avg     = scores.reduce((a,b) => a+b, 0) / scores.length;
-
-  const dimScores = {};
-  state.questions.forEach(q => {
-    if (!dimScores[q.s]) dimScores[q.s] = [];
-    dimScores[q.s].push(state.answers[q.id] || 3);
-  });
-  const dimAvgs = {};
-  Object.keys(dimScores).forEach(k => {
-    dimAvgs[k] = dimScores[k].reduce((a,b) => a+b, 0) / dimScores[k].length;
-  });
-
-  const entry = { team:state.team, ts:Date.now(), avg, answers:state.answers, dimAvgs, comment };
-  saveResponse(entry);
-
-  const lvl = hudsonLevel(avg);
-  document.getElementById('ty-score').textContent = avg.toFixed(2);
-  document.getElementById('ty-level').textContent  = lvl.label;
-  showScreen('thankyou');
-
-  btn.disabled = false;
-  btn.innerHTML = 'Submit survey';
-});
-
-document.getElementById('btn-restart').addEventListener('click', () => {
-  document.getElementById('login-team').value = '';
-  document.getElementById('login-pass').value  = '';
-  document.getElementById('comment-text').value = '';
+document.getElementById('btn-restart').addEventListener('click',()=>{
+  document.getElementById('login-team').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('comment-text').value='';
   showScreen('login');
 });
 
-// ─── Admin ────────────────────────────────────────────────────────────────────
-function loadAdminView() {
-  document.getElementById('admin-loading').style.display = 'flex';
-  document.getElementById('admin-content').style.display = 'none';
-  allResponses = loadResponses();
-  renderAdmin(allResponses);
-  document.getElementById('admin-loading').style.display = 'none';
-  document.getElementById('admin-content').style.display = 'block';
-}
-
-function renderAdmin(responses) {
-  const teamFilter = document.getElementById('filter-team').value;
-  const filtered   = teamFilter === 'all' ? responses : responses.filter(r => r.team === teamFilter);
-
-  renderOverview(filtered);
-  renderDimensions(filtered);
-  renderRespondents(filtered);
-  renderComments(filtered);
-}
-
-function renderOverview(responses) {
-  const el = document.getElementById('tab-overview');
-  if (responses.length === 0) {
-    el.innerHTML = '<p class="muted" style="padding:1rem 0;">No responses yet.</p>';
-    return;
+// ── Admin ─────────────────────────────────────────────────────────────────────
+async function loadAdminView(){
+  const loadEl=document.getElementById('admin-loading');
+  const errEl=document.getElementById('admin-error');
+  const content=document.getElementById('admin-content');
+  loadEl.style.display='flex';errEl.style.display='none';content.style.display='none';
+  try{
+    allResponses=await dbFetch();
+    renderAdmin(allResponses);
+    loadEl.style.display='none';content.style.display='block';
+  }catch(e){
+    loadEl.style.display='none';
+    errEl.textContent='Failed to load responses: '+e.message;
+    errEl.style.display='flex';
   }
-  const overall = responses.reduce((a,r) => a+r.avg, 0) / responses.length;
-  const lvl = hudsonLevel(overall);
+}
 
-  // Team breakdown
-  let teamRows = '';
-  TEAMS.forEach(t => {
-    const tr = responses.filter(r => r.team === t);
-    if (!tr.length) return;
-    const ta = tr.reduce((a,r) => a+r.avg, 0) / tr.length;
-    teamRows += `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;">
-      ${teamBadge(t)} <span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span>
-      <span style="margin-left:auto;">${levelBadge(ta)}</span>
-    </div>`;
+function renderAdmin(responses){
+  const f=document.getElementById('filter-team').value;
+  const filtered=f==='all'?responses:responses.filter(r=>r.team===f);
+  renderOverview(filtered);renderDimensions(filtered);renderRespondents(filtered);renderComments(filtered);
+}
+
+function renderOverview(responses){
+  const el=document.getElementById('tab-overview');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
+  const lvl=hudsonLevel(overall);
+  let teamRows='';
+  TEAMS.forEach(t=>{
+    const tr=responses.filter(r=>r.team===t);if(!tr.length)return;
+    const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;
+    teamRows+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;">${teamBadge(t)}<span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span><span style="margin-left:auto;">${levelBadge(ta)}</span></div>`;
   });
+  const dimTotals={},dimCounts={};
+  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{dimTotals[k]=(dimTotals[k]||0)+r.dim_avgs[k];dimCounts[k]=(dimCounts[k]||0)+1;});});
+  let dimBars='';
+  SECTIONS.forEach((name,idx)=>{
+    const avg=dimCounts[idx]?dimTotals[idx]/dimCounts[idx]:null;
+    dimBars+=`<div class="dim-row"><span style="flex:1;">${name}</span><div style="display:flex;align-items:center;gap:8px;">${avg?`<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;
+  });
+  el.innerHTML=`<div class="metric-grid"><div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div><div class="metric"><div class="m-label">Overall score</div><div class="m-value">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div></div>
+  <div class="card"><h3 style="margin-bottom:6px;">Hudson maturity level</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Average across all dimensions and respondents</p><span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span><div style="margin-top:12px;font-size:12px;color:var(--text2);">1–1.9 Pathological · 2–2.9 Reactive · 3–3.9 Calculative · 4–4.4 Proactive · 4.5–5 Generative</div>${teamRows?`<div style="margin-top:14px;border-top:0.5px solid var(--border);padding-top:10px;">${teamRows}</div>`:''}</div>
+  <div class="card"><h3 style="margin-bottom:12px;">Score by dimension</h3>${dimBars}</div>`;
+}
 
-  // Dimension mini bars
-  const dimTotals={}, dimCounts={};
-  responses.forEach(r => {
-    Object.keys(r.dimAvgs||{}).forEach(k => {
-      dimTotals[k] = (dimTotals[k]||0) + r.dimAvgs[k];
-      dimCounts[k] = (dimCounts[k]||0) + 1;
+function renderDimensions(responses){
+  const el=document.getElementById('tab-dimensions');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  const dimTotals={},dimCounts={};
+  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{dimTotals[k]=(dimTotals[k]||0)+r.dim_avgs[k];dimCounts[k]=(dimCounts[k]||0)+1;});});
+  let html='';
+  SECTIONS.forEach((name,idx)=>{
+    const dimAvg=dimCounts[idx]?dimTotals[idx]/dimCounts[idx]:null;
+    const lvlD=dimAvg?hudsonLevel(dimAvg):null;
+    let qRows='';
+    QUESTIONS.filter(q=>q.s===idx).forEach(q=>{
+      const qScores=responses.map(r=>r.answers?r.answers[q.id]:null).filter(Boolean);
+      const qAvg=qScores.length?qScores.reduce((a,b)=>a+b,0)/qScores.length:null;
+      qRows+=`<div class="dim-row" style="font-size:13px;"><span style="flex:1;color:var(--text2);">${q.title}</span><div style="display:flex;align-items:center;gap:8px;">${qAvg?`<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${qAvg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;">${qAvg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;
     });
+    html+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;"><h3>${name}</h3>${lvlD?levelBadge(dimAvg):''}</div>${qRows}</div>`;
   });
-  let dimBars = '';
-  SECTIONS.forEach((name, idx) => {
-    const avg = dimCounts[idx] ? dimTotals[idx]/dimCounts[idx] : null;
-    dimBars += `<div class="dim-row">
-      <span style="flex:1;">${name}</span>
-      <div style="display:flex;align-items:center;gap:8px;">
-        ${avg ? `<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;">${avg.toFixed(1)}</span>` : '<span class="small">—</span>'}
-      </div>
-    </div>`;
-  });
-
-  el.innerHTML = `
-    <div class="metric-grid">
-      <div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div>
-      <div class="metric"><div class="m-label">Overall score</div><div class="m-value">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div>
-    </div>
-    <div class="card">
-      <h3 style="margin-bottom:6px;">Hudson maturity level</h3>
-      <p class="muted" style="font-size:13px;margin-bottom:12px;">Average across all dimensions and respondents</p>
-      <span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span>
-      <div style="margin-top:12px;font-size:12px;color:var(--text2);">1–1.9 Pathological &nbsp;·&nbsp; 2–2.9 Reactive &nbsp;·&nbsp; 3–3.9 Calculative &nbsp;·&nbsp; 4–4.4 Proactive &nbsp;·&nbsp; 4.5–5 Generative</div>
-      ${teamRows ? `<div style="margin-top:14px;border-top:0.5px solid var(--border);padding-top:10px;">${teamRows}</div>` : ''}
-    </div>
-    <div class="card">
-      <h3 style="margin-bottom:12px;">Score by dimension</h3>
-      ${dimBars}
-    </div>`;
+  el.innerHTML=html;
 }
 
-function renderDimensions(responses) {
-  const el = document.getElementById('tab-dimensions');
-  if (responses.length === 0) { el.innerHTML = '<p class="muted" style="padding:1rem 0;">No responses yet.</p>'; return; }
-
-  let html = '';
-  const dimTotals={}, dimCounts={};
-  responses.forEach(r => {
-    Object.keys(r.dimAvgs||{}).forEach(k => {
-      dimTotals[k]=(dimTotals[k]||0)+r.dimAvgs[k];
-      dimCounts[k]=(dimCounts[k]||0)+1;
-    });
+function renderRespondents(responses){
+  const el=document.getElementById('tab-respondents');
+  if(!responses.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No respondents yet.</p></div>';return;}
+  let rows='';
+  [...responses].reverse().forEach(r=>{
+    const d=new Date(r.created_at);
+    const date=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const time=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    rows+=`<div class="resp-row"><div>${teamBadge(r.team)}</div><div style="display:flex;align-items:center;gap:8px;">${levelBadge(r.avg_score)}<span class="small">${date} ${time}</span></div></div>`;
   });
-
-  SECTIONS.forEach((name, idx) => {
-    const dimAvg = dimCounts[idx] ? dimTotals[idx]/dimCounts[idx] : null;
-    const lvlD   = dimAvg ? hudsonLevel(dimAvg) : null;
-    const sQs    = QUESTIONS.filter(q => q.s === idx);
-
-    let qRows = '';
-    sQs.forEach(q => {
-      const qScores = responses.map(r => r.answers[q.id]).filter(Boolean);
-      const qAvg    = qScores.length ? qScores.reduce((a,b)=>a+b,0)/qScores.length : null;
-      qRows += `<div class="dim-row" style="font-size:13px;">
-        <span style="flex:1;color:var(--text2);">${q.title}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          ${qAvg ? `<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${qAvg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;">${qAvg.toFixed(1)}</span>` : '<span class="small">—</span>'}
-        </div>
-      </div>`;
-    });
-
-    html += `<div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-        <h3>${name}</h3>
-        ${lvlD ? levelBadge(dimAvg) : ''}
-      </div>
-      ${qRows}
-    </div>`;
-  });
-  el.innerHTML = html;
+  el.innerHTML=`<div class="card">${rows}</div>`;
 }
 
-function renderRespondents(responses) {
-  const el = document.getElementById('tab-respondents');
-  if (responses.length === 0) { el.innerHTML = '<div class="card"><p class="muted" style="font-size:13px;">No respondents yet.</p></div>'; return; }
-
-  let rows = '';
-  [...responses].reverse().forEach(r => {
-    const date = new Date(r.ts).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
-    const time = new Date(r.ts).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-    rows += `<div class="resp-row">
-      <div>${teamBadge(r.team)}</div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        ${levelBadge(r.avg)}
-        <span class="small">${date} ${time}</span>
-      </div>
-    </div>`;
+function renderComments(responses){
+  const el=document.getElementById('tab-comments');
+  const wc=responses.filter(r=>r.comment);
+  if(!wc.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No comments submitted.</p></div>';return;}
+  let items='';
+  [...wc].reverse().forEach(r=>{
+    const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    items+=`<div class="comment-item"><div class="comment-meta">${teamBadge(r.team)} · ${date}</div><div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div></div>`;
   });
-  el.innerHTML = `<div class="card">${rows}</div>`;
+  el.innerHTML=`<div class="card">${items}</div>`;
 }
 
-function renderComments(responses) {
-  const el = document.getElementById('tab-comments');
-  const withComments = responses.filter(r => r.comment);
-  if (!withComments.length) { el.innerHTML = '<div class="card"><p class="muted" style="font-size:13px;">No comments submitted.</p></div>'; return; }
-
-  let items = '';
-  [...withComments].reverse().forEach(r => {
-    const date = new Date(r.ts).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
-    items += `<div class="comment-item">
-      <div class="comment-meta">${teamBadge(r.team)} &nbsp;·&nbsp; ${date}</div>
-      <div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div>
-    </div>`;
-  });
-  el.innerHTML = `<div class="card">${items}</div>`;
-}
-
-// Tabs
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   });
 });
 
-// Filter
-document.getElementById('filter-team').addEventListener('change', () => renderAdmin(allResponses));
-
-// Refresh
-document.getElementById('btn-refresh').addEventListener('click', loadAdminView);
-
-// Logout
-document.getElementById('btn-logout').addEventListener('click', () => {
-  document.getElementById('login-team').value = '';
-  document.getElementById('login-pass').value  = '';
-  document.getElementById('login-error').style.display = 'none';
-  showScreen('login');
+document.getElementById('filter-team').addEventListener('change',()=>renderAdmin(allResponses));
+document.getElementById('btn-refresh').addEventListener('click',loadAdminView);
+document.getElementById('btn-clear-lock').addEventListener('click',()=>{
+  localStorage.removeItem(LS_SUBMITTED);
+  alert('Submission lock cleared on this device. This person can now resubmit.');
 });
-
-// Reset
-document.getElementById('btn-clear').addEventListener('click', () => {
-  if (!confirm('This will permanently delete ALL survey responses from this browser. Are you sure?')) return;
-  localStorage.removeItem(LS_KEY);
-  allResponses = [];
-  loadAdminView();
+document.getElementById('btn-logout').addEventListener('click',()=>{
+  document.getElementById('login-team').value='';document.getElementById('login-pass').value='';
+  document.getElementById('login-error').style.display='none';showScreen('login');
 });
-
-// Export CSV
-document.getElementById('btn-export').addEventListener('click', () => {
-  const responses = loadResponses();
-  if (!responses.length) { alert('No data to export.'); return; }
-
-  const headers = ['Team','Date','Time','Overall Score','Hudson Level', ...SECTIONS.map(s => s.replace(/,/g,';')),'Comment'];
-  const rows = responses.map(r => {
-    const d    = new Date(r.ts);
-    const date = d.toLocaleDateString('en-GB');
-    const time = d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    const lvl  = hudsonLevel(r.avg).label;
-    const dims = SECTIONS.map((_, idx) => r.dimAvgs[idx] ? r.dimAvgs[idx].toFixed(2) : '');
-    return [r.team, date, time, r.avg.toFixed(2), lvl, ...dims, '"'+(r.comment||'').replace(/"/g,'""')+'"'].join(',');
+document.getElementById('btn-clear').addEventListener('click',async()=>{
+  if(!confirm('This will permanently delete ALL survey responses. Are you sure?'))return;
+  try{await dbDeleteAll();allResponses=[];loadAdminView();}catch(e){alert('Failed: '+e.message);}
+});
+document.getElementById('btn-export').addEventListener('click',()=>{
+  if(!allResponses.length){alert('No data to export.');return;}
+  const headers=['Team','Date','Time','Overall Score','Hudson Level',...SECTIONS.map(s=>s.replace(/,/g,';')),'Comment'];
+  const rows=allResponses.map(r=>{
+    const d=new Date(r.created_at);
+    const dims=SECTIONS.map((_,idx)=>r.dim_avgs[idx]?parseFloat(r.dim_avgs[idx]).toFixed(2):'');
+    return[r.team,d.toLocaleDateString('en-GB'),d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),r.avg_score.toFixed(2),hudsonLevel(r.avg_score).label,...dims,'"'+(r.comment||'').replace(/"/g,'""')+'"'].join(',');
   });
-
-  const csv  = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = 'hudson-survey-results.csv';
-  a.click(); URL.revokeObjectURL(url);
+  const csv=[headers.join(','),...rows].join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='hudson-survey-results.csv';a.click();
 });
 </script>
 </body>
