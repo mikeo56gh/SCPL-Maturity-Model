@@ -1,330 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Safety Culture Survey · Hudson Model</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efeb;
-    --text: #1a1a18; --text2: #6b6b67; --text3: #9a9a96;
-    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
-    --radius: 10px; --radius-sm: 6px;
-    --danger: #a32d2d; --danger-bg: #fcebeb;
-    --info: #185fa5; --info-bg: #e6f1fb;
-    --success: #0f6e56; --success-bg: #e1f5ee;
-    --warning: #854f0b; --warning-bg: #faeeda;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a; --bg2: #252522; --bg3: #2e2e2b;
-      --text: #f0efeb; --text2: #9a9a96; --text3: #6b6b67;
-      --border: rgba(255,255,255,0.10); --border2: rgba(255,255,255,0.18);
-      --danger: #f09595; --danger-bg: #3a1515;
-      --info: #85b7eb; --info-bg: #0c2540;
-      --success: #5dcaa5; --success-bg: #04201a;
-      --warning: #ef9f27; --warning-bg: #2a1a04;
-    }
-  }
-  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);font-size:16px;line-height:1.6;}
-  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem;}
-  .container{width:100%;max-width:580px;}
-  .container.wide{max-width:740px;}
-  .screen{display:none;}
-  .screen.active{display:block;}
-  h2{font-size:18px;font-weight:600;margin-bottom:4px;}
-  h3{font-size:15px;font-weight:600;margin-bottom:4px;}
-  .muted{color:var(--text2);font-size:14px;}
-  .small{font-size:13px;color:var(--text3);}
-  .site-header{text-align:center;margin-bottom:2rem;padding-top:1rem;}
-  .logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:0.75rem;}
-  .logo-icon{width:36px;height:36px;border-radius:8px;background:var(--text);display:flex;align-items:center;justify-content:center;}
-  .logo-icon svg{width:20px;height:20px;fill:var(--bg);}
-  .card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
-  .form-group{margin-bottom:1.25rem;}
-  label.field-label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
-  select,input[type=password],textarea{width:100%;padding:10px 12px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;background:var(--bg);color:var(--text);transition:border-color 0.15s;appearance:none;-webkit-appearance:none;}
-  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
-  select:focus,input[type=password]:focus,textarea:focus{outline:none;border-color:var(--text);}
-  .error-msg{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;transition:background 0.15s,opacity 0.15s;}
-  .btn:hover{background:var(--bg2);}
-  .btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
-  .btn.primary:hover{opacity:0.85;}
-  .btn.danger{color:var(--danger);border-color:var(--border);}
-  .btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none;}
-  .btn-full{width:100%;}
-  .progress-wrap{margin-bottom:1.5rem;}
-  .progress-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);margin-bottom:6px;}
-  .progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--text);border-radius:2px;transition:width 0.35s ease;}
-  .section-tag{display:inline-block;padding:3px 10px;background:var(--bg2);border-radius:20px;font-size:12px;color:var(--text2);margin-bottom:0.75rem;border:0.5px solid var(--border);}
-  .choices{display:flex;flex-direction:column;gap:8px;margin-top:1.25rem;}
-  .choice{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:0.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none;}
-  .choice:hover{background:var(--bg2);border-color:var(--border2);}
-  .choice.selected{border-color:var(--text);background:var(--bg2);}
-  .choice-num{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:1px;border:0.5px solid var(--border2);background:var(--bg);color:var(--text2);transition:background 0.15s,color 0.15s;}
-  .choice.selected .choice-num{background:var(--text);color:var(--bg);border-color:var(--text);}
-  .choice-label{font-size:14px;line-height:1.55;padding-top:2px;}
-  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem;gap:10px;}
-  .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px;margin-bottom:1rem;}
-  .metric{background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;}
-  .metric .m-label{font-size:12px;color:var(--text2);margin-bottom:4px;}
-  .metric .m-value{font-size:24px;font-weight:600;}
-  .metric .m-sub{font-size:12px;color:var(--text2);margin-top:2px;}
-  .dim-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:14px;gap:12px;}
-  .dim-row:last-child{border-bottom:none;}
-  .bar-wrap{width:90px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;flex-shrink:0;}
-  .bar-fill{height:100%;background:var(--text);border-radius:3px;}
-  .tabs{display:flex;border-bottom:0.5px solid var(--border);margin-bottom:1.25rem;flex-wrap:wrap;}
-  .tab-btn{padding:9px 16px;font-size:13px;font-family:inherit;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);cursor:pointer;transition:color 0.15s;}
-  .tab-btn.active{color:var(--text);border-bottom-color:var(--text);}
-  .tab-panel{display:none;}
-  .tab-panel.active{display:block;}
-  .resp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:10px;}
-  .resp-row:last-child{border-bottom:none;}
-  .comment-item{padding:10px 0;border-bottom:0.5px solid var(--border);}
-  .comment-item:last-child{border-bottom:none;}
-  .comment-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
-  .comment-body{font-size:14px;line-height:1.55;}
-  .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin 0.6s linear infinite;vertical-align:middle;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
-  .alert-info{background:var(--info-bg);color:var(--info);}
-  .alert-danger{background:var(--danger-bg);color:var(--danger);}
-  .checkmark{width:60px;height:60px;border-radius:50%;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
-  .checkmark svg{width:28px;height:28px;stroke:var(--success);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
-  .filter-row{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
-  .filter-row label{font-size:13px;color:var(--text2);white-space:nowrap;}
-  .filter-row select{max-width:160px;font-size:13px;padding:7px 32px 7px 10px;}
-  .admin-topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;}
-  .admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
-  .setup-step{display:flex;gap:12px;margin-bottom:1.25rem;}
-  .step-num{width:28px;height:28px;border-radius:50%;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px;}
-  .step-body h3{font-size:15px;margin-bottom:4px;}
-  .step-body p{font-size:13px;color:var(--text2);line-height:1.6;}
-  code{background:var(--bg2);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--text);border:0.5px solid var(--border);}
-  @media(max-width:480px){.page{padding:1rem 0.75rem 3rem;}.card{padding:1.25rem 1rem;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;--bg3:#f0efeb;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9a9a96;
+  --border:rgba(0,0,0,0.10);--border2:rgba(0,0,0,0.18);
+  --radius:10px;--radius-sm:6px;
+  --danger:#a32d2d;--danger-bg:#fcebeb;
+  --info:#185fa5;--info-bg:#e6f1fb;
+  --success:#0f6e56;--success-bg:#e1f5ee;
+  --warning:#854f0b;--warning-bg:#faeeda;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252522;--bg3:#2e2e2b;
+  --text:#f0efeb;--text2:#9a9a96;--text3:#6b6b67;
+  --border:rgba(255,255,255,0.10);--border2:rgba(255,255,255,0.18);
+  --danger:#f09595;--danger-bg:#3a1515;
+  --info:#85b7eb;--info-bg:#0c2540;
+  --success:#5dcaa5;--success-bg:#04201a;
+  --warning:#ef9f27;--warning-bg:#2a1a04;
+}}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg3);color:var(--text);font-size:16px;line-height:1.6;}
+.page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 4rem;}
+.container{width:100%;max-width:580px;}
+.wide{max-width:780px;}
+.screen{display:none;}
+.screen.active{display:block;}
+h2{font-size:18px;font-weight:600;margin-bottom:4px;}
+h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+.muted{color:var(--text2);font-size:14px;}
+.small{font-size:13px;color:var(--text3);}
+.site-header{text-align:center;margin-bottom:2rem;padding-top:1rem;}
+.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:.75rem;}
+.logo-icon{width:36px;height:36px;border-radius:8px;background:var(--text);display:flex;align-items:center;justify-content:center;}
+.logo-icon svg{width:20px;height:20px;fill:var(--bg);}
+.card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+.card-sm{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.75rem;}
+.form-group{margin-bottom:1.25rem;}
+label.field-label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px;font-weight:500;}
+select,input[type=password],input[type=text],textarea{width:100%;padding:10px 12px;border:.5px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;background:var(--bg);color:var(--text);transition:border-color .15s;appearance:none;-webkit-appearance:none;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--text);}
+.error-msg{color:var(--danger);font-size:13px;margin-top:6px;display:none;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border:.5px solid var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;transition:background .15s,opacity .15s;}
+.btn:hover{background:var(--bg2);}
+.btn.primary{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn.primary:hover{opacity:.85;}
+.btn.danger{color:var(--danger);border-color:var(--border);}
+.btn.success-btn{background:var(--success);color:#fff;border-color:var(--success);}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.btn-full{width:100%;}
+.progress-wrap{margin-bottom:1.5rem;}
+.progress-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);margin-bottom:6px;}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--text);border-radius:2px;transition:width .35s ease;}
+.section-tag{display:inline-block;padding:3px 10px;background:var(--bg2);border-radius:20px;font-size:12px;color:var(--text2);margin-bottom:.75rem;border:.5px solid var(--border);}
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:1.25rem;}
+.choice{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.choice:hover{background:var(--bg2);border-color:var(--border2);}
+.choice.selected{border-color:var(--text);background:var(--bg2);}
+.choice-num{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:1px;border:.5px solid var(--border2);background:var(--bg);color:var(--text2);}
+.choice.selected .choice-num{background:var(--text);color:var(--bg);border-color:var(--text);}
+.choice-label{font-size:14px;line-height:1.55;padding-top:2px;}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:1.25rem;gap:10px;}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px;margin-bottom:1rem;}
+.metric{background:var(--bg2);border-radius:var(--radius-sm);padding:1rem;}
+.metric .m-label{font-size:12px;color:var(--text2);margin-bottom:4px;}
+.metric .m-value{font-size:22px;font-weight:600;}
+.metric .m-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.dim-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--border);font-size:14px;gap:12px;}
+.dim-row:last-child{border-bottom:none;}
+.bar-wrap{width:90px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;flex-shrink:0;}
+.bar-fill{height:100%;border-radius:3px;}
+.tabs{display:flex;border-bottom:.5px solid var(--border);margin-bottom:1.25rem;flex-wrap:wrap;}
+.tab-btn{padding:9px 14px;font-size:13px;font-family:inherit;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);cursor:pointer;transition:color .15s;}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--text);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.resp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--border);font-size:13px;gap:10px;}
+.resp-row:last-child{border-bottom:none;}
+.comment-item{padding:10px 0;border-bottom:.5px solid var(--border);}
+.comment-item:last-child{border-bottom:none;}
+.comment-meta{font-size:12px;color:var(--text2);margin-bottom:4px;}
+.comment-body{font-size:14px;line-height:1.55;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--text);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.alert-info{background:var(--info-bg);color:var(--info);}
+.alert-danger{background:var(--danger-bg);color:var(--danger);}
+.alert-success{background:var(--success-bg);color:var(--success);}
+.checkmark{width:60px;height:60px;border-radius:50%;background:var(--success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+.checkmark svg{width:28px;height:28px;stroke:var(--success);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.campaign-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+.campaign-active{background:var(--success-bg);color:var(--success);}
+.campaign-closed{background:var(--bg2);color:var(--text3);}
+.delta-up{color:#0f6e56;font-weight:600;}
+.delta-down{color:#a32d2d;font-weight:600;}
+.delta-same{color:var(--text3);}
+.admin-topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.filter-row label{font-size:13px;color:var(--text2);white-space:nowrap;}
+.filter-row select{max-width:180px;font-size:13px;padding:7px 32px 7px 10px;}
+@media(max-width:480px){.page{padding:1rem .75rem 3rem;}.card{padding:1.25rem 1rem;}}
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- SETUP SCREEN -->
-  <div id="screen-setup" class="screen container">
-    <div class="site-header">
-      <div class="logo">
-        <div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div>
-        <span style="font-size:17px;font-weight:700;">Safety culture survey</span>
-      </div>
-      <p class="muted">Setup required before the survey can be used</p>
-    </div>
-    <div class="card">
-      <h2 style="margin-bottom:1.25rem;">Connect to Supabase</h2>
-      <div class="setup-step">
-        <div class="step-num">1</div>
-        <div class="step-body"><h3>Create a Supabase project</h3><p>Go to <strong>supabase.com</strong>, sign up free, and create a new project. Note down your project URL and anon key from <strong>Project Settings → API</strong>.</p></div>
-      </div>
-      <div class="setup-step">
-        <div class="step-num">2</div>
-        <div class="step-body"><h3>Create the database table</h3><p>In Supabase go to <strong>SQL Editor</strong> and run this query:</p>
-          <pre style="background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:10px;font-size:12px;font-family:monospace;overflow-x:auto;margin-top:8px;line-height:1.6;">create table survey_responses (
+<!-- SETUP -->
+<div id="screen-setup" class="screen container">
+  <div class="site-header">
+    <div class="logo"><div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div><span style="font-size:17px;font-weight:700;">Safety culture survey</span></div>
+    <p class="muted">Setup required</p>
+  </div>
+  <div class="card">
+    <h2 style="margin-bottom:1.25rem;">Connect to Supabase</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem;">Open this file in a text editor and replace the two placeholder values in the SUPABASE CONFIGURATION section near the top of the &lt;script&gt;. You also need to run the SQL below in Supabase's SQL Editor to create the two required tables.</p>
+    <pre style="background:var(--bg2);border:.5px solid var(--border);border-radius:6px;padding:12px;font-size:11px;font-family:monospace;overflow-x:auto;line-height:1.7;">create table campaigns (
   id bigint generated always as identity primary key,
   created_at timestamptz default now(),
+  name text not null unique,
+  is_active boolean default true
+);
+
+create table survey_responses (
+  id bigint generated always as identity primary key,
+  created_at timestamptz default now(),
+  campaign_id bigint references campaigns(id),
+  campaign_name text,
   team text not null,
   avg_score numeric not null,
   dim_avgs jsonb,
   answers jsonb,
-  comment text
+  comment text,
+  browser_id text
 );
 
+alter table campaigns enable row level security;
 alter table survey_responses enable row level security;
 
-create policy "Allow insert" on survey_responses
-  for insert with check (true);
-
-create policy "Allow select" on survey_responses
-  for select using (true);
-
-create policy "Allow delete" on survey_responses
-  for delete using (true);</pre>
-        </div>
-      </div>
-      <div class="setup-step">
-        <div class="step-num">3</div>
-        <div class="step-body"><h3>Add your credentials to this file</h3><p>Open this HTML file in any text editor (Notepad, TextEdit, VS Code). Find the section near the top of the <code>&lt;script&gt;</code> that says <code>SUPABASE CONFIGURATION</code> and replace the two placeholder values with your URL and anon key. Save the file.</p></div>
-      </div>
-      <div class="setup-step">
-        <div class="step-num">4</div>
-        <div class="step-body"><h3>Deploy to Vercel</h3><p>Rename the file to <code>index.html</code>, put it in a folder, and drag that folder to <strong>vercel.com/new</strong>. Your survey will be live at a <code>yourname.vercel.app</code> URL.</p></div>
-      </div>
-    </div>
+create policy "public insert campaigns" on campaigns for insert with check (true);
+create policy "public select campaigns" on campaigns for select using (true);
+create policy "public update campaigns" on campaigns for update using (true);
+create policy "public delete campaigns" on campaigns for delete using (true);
+create policy "public insert responses" on survey_responses for insert with check (true);
+create policy "public select responses" on survey_responses for select using (true);
+create policy "public delete responses" on survey_responses for delete using (true);</pre>
   </div>
-
-  <!-- ALREADY SUBMITTED -->
-  <div id="screen-already" class="screen container" style="text-align:center;padding-top:2rem;">
-    <div style="width:60px;height:60px;border-radius:50%;background:var(--warning-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:26px;">&#9888;</div>
-    <h2>Already submitted</h2>
-    <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">It looks like you've already completed this survey on this device. Only one submission per person is allowed.</p>
-    <p class="muted" style="margin-top:10px;max-width:380px;margin-left:auto;margin-right:auto;font-size:13px;">If you believe this is an error, please contact your survey administrator.</p>
-  </div>
-
-  <!-- LOGIN -->
-  <div id="screen-login" class="screen container">
-    <div class="site-header">
-      <div class="logo">
-        <div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div>
-        <span style="font-size:17px;font-weight:700;">Safety culture survey</span>
-      </div>
-      <p class="muted">Hudson maturity model &nbsp;·&nbsp; Confidential</p>
-    </div>
-    <div class="card">
-      <div class="form-group">
-        <label class="field-label">Your team</label>
-        <select id="login-team">
-          <option value="">Select your team...</option>
-          <option value="SCPL">SCPL</option>
-          <option value="BP MMA">BP MMA</option>
-          <option value="PXE">PXE</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="field-label">Passcode</label>
-        <input type="password" id="login-pass" placeholder="Enter passcode" autocomplete="off" />
-      </div>
-      <div id="login-error" class="error-msg"></div>
-      <button class="btn primary btn-full" id="btn-login" style="margin-top:0.5rem;">Begin survey</button>
-    </div>
-    <p class="small" style="text-align:center;">Respondents: <strong>safety2024</strong> &nbsp;·&nbsp; Admin: <strong>admin2024</strong></p>
-  </div>
-
-  <!-- SURVEY -->
-  <div id="screen-survey" class="screen container">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-      <div><h2>Safety culture survey</h2><p class="muted" id="survey-team-label"></p></div>
-      <span class="small" id="q-counter" style="white-space:nowrap;"></span>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-meta"><span id="progress-section"></span><span id="progress-pct"></span></div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    </div>
-    <div class="card">
-      <div class="section-tag" id="q-section-tag"></div>
-      <h3 id="q-title" style="font-size:16px;line-height:1.45;"></h3>
-      <div class="choices" id="choices"></div>
-      <p id="warn-unanswered" class="error-msg" style="margin-top:10px;">Please select an answer to continue.</p>
-    </div>
-    <div class="nav-row">
-      <button class="btn" id="btn-prev">&#8592; Back</button>
-      <button class="btn primary" id="btn-next">Next &#8594;</button>
-    </div>
-  </div>
-
-  <!-- COMMENT -->
-  <div id="screen-comment" class="screen container">
-    <h2 style="margin-bottom:0.25rem;">Almost done</h2>
-    <p class="muted" style="margin-bottom:1.5rem;">All 30 questions answered. Add any comments before submitting.</p>
-    <div class="card">
-      <div class="form-group" style="margin-bottom:0;">
-        <label class="field-label">Comments, observations or suggestions <span style="font-weight:400;color:var(--text3);">(optional)</span></label>
-        <textarea id="comment-text" rows="6" placeholder="What's working well? What could be better? Any safety concerns you'd like to highlight..."></textarea>
-      </div>
-    </div>
-    <div id="submit-error" class="alert alert-danger" style="display:none;"></div>
-    <div class="nav-row">
-      <button class="btn" id="btn-back-to-survey">&#8592; Back</button>
-      <button class="btn primary" id="btn-submit">Submit survey</button>
-    </div>
-  </div>
-
-  <!-- THANK YOU -->
-  <div id="screen-thankyou" class="screen container" style="text-align:center;padding-top:2rem;">
-    <div class="checkmark"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-    <h2>Thank you</h2>
-    <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">Your responses have been recorded. Results are kept confidential — only aggregated team data is reported.</p>
-    <div class="card" style="margin-top:1.5rem;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;">
-      <p class="small" style="margin-bottom:0.75rem;">Your result</p>
-      <div class="metric-grid">
-        <div class="metric"><div class="m-label">Your score</div><div class="m-value" id="ty-score">—</div><div class="m-sub" id="ty-level">—</div></div>
-      </div>
-    </div>
-    <button class="btn" id="btn-restart" style="margin-top:0.5rem;">Return to start</button>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="screen-admin" class="screen wide container">
-    <div class="admin-topbar">
-      <div><h2>Admin report</h2><p class="muted">Hudson safety culture maturity</p></div>
-      <div class="admin-actions">
-        <button class="btn" id="btn-refresh">&#8635; Refresh</button>
-        <button class="btn" id="btn-export">&#8681; Export CSV</button>
-        <button class="btn danger" id="btn-clear">Reset data</button>
-        <button class="btn" id="btn-clear-lock" title="Use this to allow a specific device to resubmit">Clear my lock</button>
-        <button class="btn" id="btn-logout">Log out</button>
-      </div>
-    </div>
-    <div class="filter-row">
-      <label>Filter by team:</label>
-      <select id="filter-team">
-        <option value="all">All teams</option>
-        <option value="SCPL">SCPL</option>
-        <option value="BP MMA">BP MMA</option>
-        <option value="PXE">PXE</option>
-      </select>
-    </div>
-    <div id="admin-loading" class="alert alert-info"><span class="spinner"></span>&nbsp; Loading responses...</div>
-    <div id="admin-error" class="alert alert-danger" style="display:none;"></div>
-    <div id="admin-content" style="display:none;">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="overview">Overview</button>
-        <button class="tab-btn" data-tab="radar">Radar</button>
-        <button class="tab-btn" data-tab="dimensions">Dimensions</button>
-        <button class="tab-btn" data-tab="heatmap">Question heatmap</button>
-        <button class="tab-btn" data-tab="teams">Team comparison</button>
-        <button class="tab-btn" data-tab="insights">Insights &amp; actions</button>
-        <button class="tab-btn" data-tab="respondents">Respondents</button>
-        <button class="tab-btn" data-tab="comments">Comments</button>
-      </div>
-      <div id="tab-overview" class="tab-panel active"></div>
-      <div id="tab-radar" class="tab-panel"></div>
-      <div id="tab-dimensions" class="tab-panel"></div>
-      <div id="tab-heatmap" class="tab-panel"></div>
-      <div id="tab-teams" class="tab-panel"></div>
-      <div id="tab-insights" class="tab-panel"></div>
-      <div id="tab-respondents" class="tab-panel"></div>
-      <div id="tab-comments" class="tab-panel"></div>
-    </div>
-  </div>
-
 </div>
 
+<!-- LOGIN -->
+<div id="screen-login" class="screen container">
+  <div class="site-header">
+    <div class="logo"><div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div><span style="font-size:17px;font-weight:700;">Safety culture survey</span></div>
+    <p class="muted">Hudson maturity model &nbsp;·&nbsp; Confidential</p>
+  </div>
+  <div class="card">
+    <div class="form-group">
+      <label class="field-label">Your team</label>
+      <select id="login-team"><option value="">Select your team...</option><option value="SCPL">SCPL</option><option value="BP MMA">BP MMA</option><option value="PXE">PXE</option></select>
+    </div>
+    <div class="form-group">
+      <label class="field-label">Passcode</label>
+      <input type="password" id="login-pass" placeholder="Enter passcode" autocomplete="off"/>
+    </div>
+    <div id="login-error" class="error-msg"></div>
+    <button class="btn primary btn-full" id="btn-login" style="margin-top:.5rem;">Continue</button>
+  </div>
+  <p class="small" style="text-align:center;">Respondents: <strong>safety2024</strong> &nbsp;·&nbsp; Admin: <strong>admin2024</strong></p>
+</div>
+
+<!-- CAMPAIGN SELECT (respondent) -->
+<div id="screen-campaign-select" class="screen container">
+  <div class="site-header">
+    <div class="logo"><div class="logo-icon"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v5c0 4.4 3 8.1 7 9 4-0.9 7-4.6 7-9V6L10 2z"/></svg></div><span style="font-size:17px;font-weight:700;">Safety culture survey</span></div>
+  </div>
+  <div class="card">
+    <h2 style="margin-bottom:.25rem;">Select campaign</h2>
+    <p class="muted" style="margin-bottom:1.25rem;">Choose the survey period you are completing.</p>
+    <div id="campaign-list-respondent"></div>
+    <div id="campaign-select-error" class="error-msg" style="margin-top:8px;">Please select a campaign.</div>
+  </div>
+  <div class="nav-row"><button class="btn" id="btn-back-to-login">&#8592; Back</button><button class="btn primary" id="btn-start-survey">Begin survey &#8594;</button></div>
+</div>
+
+<!-- ALREADY SUBMITTED -->
+<div id="screen-already" class="screen container" style="text-align:center;padding-top:2rem;">
+  <div style="width:60px;height:60px;border-radius:50%;background:var(--warning-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:26px;">⚠</div>
+  <h2>Already submitted</h2>
+  <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">You have already completed this campaign on this device. Only one submission per campaign is allowed.</p>
+  <button class="btn" id="btn-already-back" style="margin-top:1.5rem;">&#8592; Back</button>
+</div>
+
+<!-- SURVEY -->
+<div id="screen-survey" class="screen container">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+    <div><h2>Safety culture survey</h2><p class="muted" id="survey-meta-label"></p></div>
+    <span class="small" id="q-counter" style="white-space:nowrap;"></span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="progress-section"></span><span id="progress-pct"></span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="card">
+    <div class="section-tag" id="q-section-tag"></div>
+    <h3 id="q-title" style="font-size:16px;line-height:1.45;"></h3>
+    <div class="choices" id="choices"></div>
+    <p id="warn-unanswered" class="error-msg" style="margin-top:10px;">Please select an answer to continue.</p>
+  </div>
+  <div class="nav-row"><button class="btn" id="btn-prev">&#8592; Back</button><button class="btn primary" id="btn-next">Next &#8594;</button></div>
+</div>
+
+<!-- COMMENT -->
+<div id="screen-comment" class="screen container">
+  <h2 style="margin-bottom:.25rem;">Almost done</h2>
+  <p class="muted" style="margin-bottom:1.5rem;">All 30 questions answered. Add any comments before submitting.</p>
+  <div class="card">
+    <div class="form-group" style="margin-bottom:0;">
+      <label class="field-label">Comments, observations or suggestions <span style="font-weight:400;color:var(--text3);">(optional)</span></label>
+      <textarea id="comment-text" rows="5" placeholder="What's working well? What could be better? Any safety concerns..."></textarea>
+    </div>
+  </div>
+  <div id="submit-error" class="alert alert-danger" style="display:none;"></div>
+  <div class="nav-row"><button class="btn" id="btn-back-to-survey">&#8592; Back</button><button class="btn primary" id="btn-submit">Submit survey</button></div>
+</div>
+
+<!-- THANK YOU -->
+<div id="screen-thankyou" class="screen container" style="text-align:center;padding-top:2rem;">
+  <div class="checkmark"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+  <h2>Thank you</h2>
+  <p class="muted" style="margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto;">Your responses have been recorded. Only aggregated data is reported — individual responses are not shared.</p>
+  <div id="thankyou-cards" style="margin-top:1.5rem;"></div>
+  <button class="btn" id="btn-restart" style="margin-top:.5rem;">Return to start</button>
+</div>
+
+<!-- ADMIN -->
+<div id="screen-admin" class="screen wide container">
+  <div class="admin-topbar">
+    <div><h2>Admin panel</h2><p class="muted">Hudson safety culture maturity</p></div>
+    <div class="admin-actions">
+      <button class="btn" id="btn-refresh">&#8635; Refresh</button>
+      <button class="btn" id="btn-export">&#8681; Export CSV</button>
+      <button class="btn" id="btn-logout">Log out</button>
+    </div>
+  </div>
+
+  <!-- Campaign management -->
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:1rem;">
+      <h3 style="margin-bottom:0;">Campaigns</h3>
+      <button class="btn success-btn" id="btn-show-new-campaign" style="font-size:13px;padding:7px 14px;">+ New campaign</button>
+    </div>
+    <div id="new-campaign-form" style="display:none;margin-bottom:1rem;padding:1rem;background:var(--bg2);border-radius:var(--radius-sm);">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+        <div style="flex:1;min-width:160px;"><label class="field-label">Campaign name</label><input type="text" id="new-campaign-name" placeholder="e.g. Q1 2025"/></div>
+        <button class="btn primary" id="btn-create-campaign" style="padding:10px 16px;">Create</button>
+        <button class="btn" id="btn-cancel-campaign">Cancel</button>
+      </div>
+      <div id="campaign-create-error" class="error-msg"></div>
+    </div>
+    <div id="campaign-admin-list"></div>
+  </div>
+
+  <!-- Results filters -->
+  <div class="filter-row">
+    <label>Campaign:</label>
+    <select id="filter-campaign"><option value="all">All campaigns</option></select>
+    <label>Team:</label>
+    <select id="filter-team"><option value="all">All teams</option><option value="SCPL">SCPL</option><option value="BP MMA">BP MMA</option><option value="PXE">PXE</option></select>
+  </div>
+
+  <div id="admin-loading" class="alert alert-info"><span class="spinner"></span>&nbsp; Loading...</div>
+  <div id="admin-error" class="alert alert-danger" style="display:none;"></div>
+  <div id="admin-content" style="display:none;">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="trends">Trends</button>
+      <button class="tab-btn" data-tab="radar">Radar</button>
+      <button class="tab-btn" data-tab="dimensions">Dimensions</button>
+      <button class="tab-btn" data-tab="heatmap">Heatmap</button>
+      <button class="tab-btn" data-tab="teams">Teams</button>
+      <button class="tab-btn" data-tab="insights">Insights</button>
+      <button class="tab-btn" data-tab="respondents">Respondents</button>
+      <button class="tab-btn" data-tab="comments">Comments</button>
+    </div>
+    <div id="tab-overview" class="tab-panel active"></div>
+    <div id="tab-trends" class="tab-panel"></div>
+    <div id="tab-radar" class="tab-panel"></div>
+    <div id="tab-dimensions" class="tab-panel"></div>
+    <div id="tab-heatmap" class="tab-panel"></div>
+    <div id="tab-teams" class="tab-panel"></div>
+    <div id="tab-insights" class="tab-panel"></div>
+    <div id="tab-respondents" class="tab-panel"></div>
+    <div id="tab-comments" class="tab-panel"></div>
+  </div>
+</div>
+
+</div><!-- end .page -->
 <script>
 // ════════════════════════════════════════════════════
 //  SUPABASE CONFIGURATION
-//  Replace these two values after setting up Supabase
 // ════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://zrfytqliqbnzdiyqmnte.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_MRjoINHWGVEbTx-siAeQ7g_MyA6_6J8';
-const TABLE_NAME   = 'survey_responses';
+const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_URL_HERE';
+const SUPABASE_KEY = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
 // ════════════════════════════════════════════════════
 
 const SURVEY_PASS = 'safety2024';
 const ADMIN_PASS  = 'admin2024';
-
 const TEAMS = ['SCPL','BP MMA','PXE'];
-const TEAM_STYLE = {
-  'SCPL':   {bg:'#e6f1fb',color:'#185fa5'},
-  'BP MMA': {bg:'#eaf3de',color:'#3b6d11'},
-  'PXE':    {bg:'#faeeda',color:'#854f0b'},
-};
-const SECTIONS = [
-  'Leadership and commitment','Workforce engagement',
-  'Risk management and hazard awareness','Learning and improvement',
-  'Reporting culture','Procedures and operational discipline',
-  'Competence and training','Contractor and partner management',
-  'Continuous improvement',
-];
+const TEAM_STYLE = {'SCPL':{bg:'#e6f1fb',color:'#185fa5'},'BP MMA':{bg:'#eaf3de',color:'#3b6d11'},'PXE':{bg:'#faeeda',color:'#854f0b'}};
+const SECTIONS = ['Leadership and commitment','Workforce engagement','Risk management and hazard awareness','Learning and improvement','Reporting culture','Procedures and operational discipline','Competence and training','Contractor and partner management','Continuous improvement'];
 const QUESTIONS = [
   {id:1,s:0,title:'How leadership prioritises safety',choices:['Production or cost takes priority over safety.','Safety discussed after incidents.','Leaders track safety KPIs and require compliance.','Leaders visibly lead safety improvement.','Safety drives operational decisions across the business.']},
   {id:2,s:0,title:'Leadership visibility',choices:['Leaders rarely visit operational areas.','Leaders visit after incidents or audits.','Leaders conduct scheduled safety walks.','Leaders actively engage with workers on hazards.','Leaders use field presence to remove risk and improve systems.']},
@@ -358,85 +349,76 @@ const QUESTIONS = [
   {id:30,s:8,title:'Improvement culture',choices:['Improvement occurs after accidents.','Improvement driven by regulator or audit findings.','Improvement programmes implemented.','Teams proactively improve systems.','Continuous improvement embedded across the organisation.']}
 ];
 
-// ── Supabase helpers ──────────────────────────────────────────────────────────
-const isConfigured = () =>
-  SUPABASE_URL !== 'PASTE_YOUR_SUPABASE_URL_HERE' &&
-  SUPABASE_KEY !== 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
+// ── Supabase API ──────────────────────────────────────────────────────────────
+const isConfigured=()=>SUPABASE_URL!=='PASTE_YOUR_SUPABASE_URL_HERE'&&SUPABASE_KEY!=='PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
+const sbHeaders={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
 
-async function dbInsert(row) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Prefer':'return=minimal'},
-    body: JSON.stringify(row)
-  });
-  if (!res.ok) throw new Error(await res.text());
-}
-
-async function dbFetch() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?select=*&order=created_at.asc`, {
-    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
-  });
-  if (!res.ok) throw new Error(await res.text());
+async function sbGet(table,query=''){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`,{headers:sbHeaders});
+  if(!res.ok)throw new Error(await res.text());
   return res.json();
 }
+async function sbPost(table,row){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{method:'POST',headers:{...sbHeaders,'Prefer':'return=representation'},body:JSON.stringify(row)});
+  if(!res.ok)throw new Error(await res.text());
+  return res.json();
+}
+async function sbPatch(table,query,data){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`,{method:'PATCH',headers:{...sbHeaders,'Prefer':'return=representation'},body:JSON.stringify(data)});
+  if(!res.ok)throw new Error(await res.text());
+  return res.json();
+}
+async function sbDelete(table,query){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`,{method:'DELETE',headers:sbHeaders});
+  if(!res.ok)throw new Error(await res.text());
+}
 
-async function dbDeleteAll() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=gte.0`, {
-    method:'DELETE',
-    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}
-  });
-  if (!res.ok) throw new Error(await res.text());
+// ── Local storage ─────────────────────────────────────────────────────────────
+const LS_PREFIX='hudson_submitted_';
+function submittedKey(campaignId){return LS_PREFIX+campaignId;}
+function hasSubmitted(campaignId){return localStorage.getItem(submittedKey(campaignId))==='yes';}
+function markSubmitted(campaignId){localStorage.setItem(submittedKey(campaignId),'yes');}
+// Store last personal result per team per campaign
+function savePersonalResult(team,campaignName,avg,dimAvgs){
+  const key=`hudson_personal_${team}`;
+  const existing=JSON.parse(localStorage.getItem(key)||'[]');
+  // avoid duplicate for same campaign
+  const filtered=existing.filter(r=>r.campaign!==campaignName);
+  filtered.push({campaign:campaignName,avg,dimAvgs,ts:Date.now()});
+  localStorage.setItem(key,JSON.stringify(filtered));
+}
+function getPersonalHistory(team){
+  return JSON.parse(localStorage.getItem(`hudson_personal_${team}`)||'[]').sort((a,b)=>a.ts-b.ts);
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
-function shuffle(arr) {
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  return a;
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function hudsonLevel(score){
+  if(score<2)return{label:'Pathological',color:'#a32d2d',bg:'#fcebeb'};
+  if(score<3)return{label:'Reactive',color:'#854f0b',bg:'#faeeda'};
+  if(score<4)return{label:'Calculative',color:'#185fa5',bg:'#e6f1fb'};
+  if(score<4.5)return{label:'Proactive',color:'#3b6d11',bg:'#eaf3de'};
+  return{label:'Generative',color:'#0f6e56',bg:'#e1f5ee'};
 }
-function hudsonLevel(score) {
-  if(score<2)   return{label:'Pathological',color:'#a32d2d',bg:'#fcebeb'};
-  if(score<3)   return{label:'Reactive',    color:'#854f0b',bg:'#faeeda'};
-  if(score<4)   return{label:'Calculative', color:'#185fa5',bg:'#e6f1fb'};
-  if(score<4.5) return{label:'Proactive',   color:'#3b6d11',bg:'#eaf3de'};
-  return              {label:'Generative',  color:'#0f6e56',bg:'#e1f5ee'};
-}
-function teamBadge(team){
-  const s=TEAM_STYLE[team]||{bg:'#f0efeb',color:'#5f5e5a'};
-  return `<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:${s.bg};color:${s.color};">${team}</span>`;
-}
-function levelBadge(score){
-  const l=hudsonLevel(score);
-  return `<span style="display:inline-block;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:600;background:${l.bg};color:${l.color};">${l.label} · ${score.toFixed(2)}</span>`;
-}
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-  window.scrollTo(0,0);
-}
+function teamBadge(team){const s=TEAM_STYLE[team]||{bg:'#f0efeb',color:'#5f5e5a'};return`<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:${s.bg};color:${s.color};">${team}</span>`;}
+function levelBadge(score){const l=hudsonLevel(score);return`<span style="display:inline-block;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:600;background:${l.bg};color:${l.color};">${l.label} · ${score.toFixed(2)}</span>`;}
+function deltaHtml(val){if(val===null||val===undefined)return'';const sign=val>0?'+':'';const cls=val>0.05?'delta-up':val<-0.05?'delta-down':'delta-same';return`<span class="${cls}" style="font-size:12px;">${sign}${val.toFixed(2)}</span>`;}
+function scoreColor(v){if(v===null)return'var(--border)';if(v<2)return'#fcebeb';if(v<3)return'#faeeda';if(v<4)return'#e6f1fb';if(v<4.5)return'#eaf3de';return'#e1f5ee';}
+function scoreTextColor(v){if(v===null)return'var(--text3)';if(v<2)return'#a32d2d';if(v<3)return'#854f0b';if(v<4)return'#185fa5';if(v<4.5)return'#3b6d11';return'#0f6e56';}
+function calcDimAvgs(responses){const t={},c={};responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{t[k]=(t[k]||0)+r.dim_avgs[k];c[k]=(c[k]||0)+1;});});const out={};SECTIONS.forEach((_,i)=>{out[i]=c[i]?t[i]/c[i]:null;});return out;}
+function calcQAvgs(responses){const out={};QUESTIONS.forEach(q=>{const s=responses.map(r=>r.answers?r.answers[q.id]:null).filter(Boolean);out[q.id]=s.length?s.reduce((a,b)=>a+b,0)/s.length:null;});return out;}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');window.scrollTo(0,0);}
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let state={team:'',isAdmin:false,questions:[],answers:{},idx:0};
+let state={team:'',isAdmin:false,questions:[],answers:{},idx:0,campaign:null};
+let allCampaigns=[];
 let allResponses=[];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-const LS_SUBMITTED = 'hudson_survey_submitted_v1';
-
-function hasSubmitted() {
-  return localStorage.getItem(LS_SUBMITTED) === 'yes';
-}
-
-function markSubmitted() {
-  localStorage.setItem(LS_SUBMITTED, 'yes');
-}
-
-window.addEventListener('DOMContentLoaded',()=>{
-  if (!isConfigured()) { showScreen('setup'); return; }
-  showScreen('login');
-});
+window.addEventListener('DOMContentLoaded',()=>{showScreen(isConfigured()?'login':'setup');});
 
 // ── Login ─────────────────────────────────────────────────────────────────────
-document.getElementById('btn-login').addEventListener('click',()=>{
+document.getElementById('btn-login').addEventListener('click',async()=>{
   const team=document.getElementById('login-team').value;
   const pass=document.getElementById('login-pass').value.trim();
   const err=document.getElementById('login-error');
@@ -445,24 +427,54 @@ document.getElementById('btn-login').addEventListener('click',()=>{
     state.team=team;state.isAdmin=true;err.style.display='none';
     showScreen('admin');loadAdminView();
   } else if(pass===SURVEY_PASS){
-    if(hasSubmitted()){err.style.display='none';showScreen('already');return;}
-    state.team=team;state.isAdmin=false;
-    state.answers={};state.idx=0;
-    state.questions=shuffle(QUESTIONS);
-    err.style.display='none';
-    document.getElementById('survey-team-label').textContent='Team: '+team;
-    renderQ();showScreen('survey');
+    state.team=team;state.isAdmin=false;err.style.display='none';
+    // load active campaigns
+    const btn=document.getElementById('btn-login');
+    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>';
+    try{
+      const campaigns=await sbGet('campaigns','select=*&order=created_at.desc');
+      const active=campaigns.filter(c=>c.is_active);
+      if(!active.length){err.textContent='No active campaigns right now. Please check back later.';err.style.display='block';btn.disabled=false;btn.innerHTML='Continue';return;}
+      // render campaign list
+      const el=document.getElementById('campaign-list-respondent');
+      el.innerHTML='';
+      active.forEach(c=>{
+        const alreadyDone=hasSubmitted(c.id);
+        const div=document.createElement('div');
+        div.style.cssText='display:flex;align-items:center;gap:12px;padding:12px 14px;border:.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:background .15s;';
+        div.innerHTML=`<input type="radio" name="campaign-pick" value="${c.id}" ${alreadyDone?'disabled':''} style="width:16px;height:16px;accent-color:var(--text);flex-shrink:0;"><div style="flex:1;"><div style="font-size:15px;font-weight:500;${alreadyDone?'color:var(--text3);':''}">${c.name}</div>${alreadyDone?'<div style="font-size:12px;color:var(--text3);margin-top:2px;">Already submitted on this device</div>':''}</div>`;
+        if(!alreadyDone)div.addEventListener('click',()=>{div.querySelector('input').checked=true;});
+        el.appendChild(div);
+      });
+      state._activeCampaigns=active;
+      showScreen('campaign-select');
+    }catch(e){err.textContent='Could not load campaigns: '+e.message;err.style.display='block';}
+    btn.disabled=false;btn.innerHTML='Continue';
   } else {
-    err.textContent='Incorrect passcode. Please try again.';err.style.display='block';
+    err.textContent='Incorrect passcode.';err.style.display='block';
   }
 });
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn-login').click();});
+document.getElementById('btn-back-to-login').addEventListener('click',()=>showScreen('login'));
+document.getElementById('btn-already-back').addEventListener('click',()=>showScreen('campaign-select'));
+
+document.getElementById('btn-start-survey').addEventListener('click',()=>{
+  const picked=document.querySelector('input[name="campaign-pick"]:checked');
+  const errEl=document.getElementById('campaign-select-error');
+  if(!picked){errEl.style.display='block';return;}
+  errEl.style.display='none';
+  const campaign=state._activeCampaigns.find(c=>c.id==picked.value);
+  if(!campaign)return;
+  state.campaign=campaign;
+  state.answers={};state.idx=0;
+  state.questions=shuffle(QUESTIONS);
+  document.getElementById('survey-meta-label').textContent=`Team: ${state.team} · ${campaign.name}`;
+  renderQ();showScreen('survey');
+});
 
 // ── Survey ────────────────────────────────────────────────────────────────────
 function renderQ(){
-  const q=state.questions[state.idx];
-  const total=state.questions.length;
-  const pct=Math.round((state.idx+1)/total*100);
+  const q=state.questions[state.idx];const total=state.questions.length;const pct=Math.round((state.idx+1)/total*100);
   document.getElementById('q-counter').textContent=(state.idx+1)+' of '+total;
   document.getElementById('progress-fill').style.width=pct+'%';
   document.getElementById('progress-section').textContent=SECTIONS[q.s];
@@ -471,19 +483,16 @@ function renderQ(){
   document.getElementById('q-title').textContent=q.title;
   document.getElementById('warn-unanswered').style.display='none';
   document.getElementById('btn-prev').disabled=state.idx===0;
-  const list=document.getElementById('choices');
-  list.innerHTML='';
+  const list=document.getElementById('choices');list.innerHTML='';
   const chosen=state.answers[q.id];
   q.choices.forEach((text,i)=>{
-    const score=i+1;
-    const div=document.createElement('div');
+    const score=i+1;const div=document.createElement('div');
     div.className='choice'+(chosen===score?' selected':'');
     div.innerHTML=`<div class="choice-num">${score}</div><div class="choice-label">${text}</div>`;
     div.addEventListener('click',()=>{
       state.answers[q.id]=score;
       list.querySelectorAll('.choice').forEach(c=>{c.classList.remove('selected');c.querySelector('.choice-num').style.cssText='';});
-      div.classList.add('selected');
-      const n=div.querySelector('.choice-num');
+      div.classList.add('selected');const n=div.querySelector('.choice-num');
       n.style.background='var(--text)';n.style.color='var(--bg)';n.style.borderColor='var(--text)';
       document.getElementById('warn-unanswered').style.display='none';
     });
@@ -493,294 +502,375 @@ function renderQ(){
 document.getElementById('btn-next').addEventListener('click',()=>{
   const q=state.questions[state.idx];
   if(!state.answers[q.id]){document.getElementById('warn-unanswered').style.display='block';return;}
-  if(state.idx<state.questions.length-1){state.idx++;renderQ();}
-  else showScreen('comment');
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}else showScreen('comment');
 });
 document.getElementById('btn-prev').addEventListener('click',()=>{if(state.idx>0){state.idx--;renderQ();}});
 document.getElementById('btn-back-to-survey').addEventListener('click',()=>{state.idx=state.questions.length-1;renderQ();showScreen('survey');});
 
 // ── Submit ────────────────────────────────────────────────────────────────────
 document.getElementById('btn-submit').addEventListener('click',async()=>{
-  const btn=document.getElementById('btn-submit');
-  const errEl=document.getElementById('submit-error');
+  const btn=document.getElementById('btn-submit');const errEl=document.getElementById('submit-error');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Saving...';errEl.style.display='none';
   const comment=document.getElementById('comment-text').value.trim();
   const scores=Object.values(state.answers);
   const avg=scores.reduce((a,b)=>a+b,0)/scores.length;
-  const dimScores={};
-  state.questions.forEach(q=>{if(!dimScores[q.s])dimScores[q.s]=[];dimScores[q.s].push(state.answers[q.id]||3);});
-  const dimAvgs={};
-  Object.keys(dimScores).forEach(k=>{dimAvgs[k]=dimScores[k].reduce((a,b)=>a+b,0)/dimScores[k].length;});
+  const dimScores={};state.questions.forEach(q=>{if(!dimScores[q.s])dimScores[q.s]=[];dimScores[q.s].push(state.answers[q.id]||3);});
+  const dimAvgs={};Object.keys(dimScores).forEach(k=>{dimAvgs[k]=dimScores[k].reduce((a,b)=>a+b,0)/dimScores[k].length;});
   try{
-    await dbInsert({team:state.team,avg_score:parseFloat(avg.toFixed(4)),dim_avgs:dimAvgs,answers:state.answers,comment:comment||null});
-    markSubmitted();
-    const lvl=hudsonLevel(avg);
-    document.getElementById('ty-score').textContent=avg.toFixed(2);
-    document.getElementById('ty-level').textContent=lvl.label;
+    await sbPost('survey_responses',{campaign_id:state.campaign.id,campaign_name:state.campaign.name,team:state.team,avg_score:parseFloat(avg.toFixed(4)),dim_avgs:dimAvgs,answers:state.answers,comment:comment||null});
+    markSubmitted(state.campaign.id);
+    savePersonalResult(state.team,state.campaign.name,avg,dimAvgs);
+    // build thank you cards
+    const lvl=hudsonLevel(avg);const history=getPersonalHistory(state.team);
+    const prev=history.length>1?history[history.length-2]:null;
+    let cards=`<div class="card" style="text-align:left;max-width:380px;margin:0 auto 1rem;">
+      <p class="small" style="margin-bottom:.75rem;">Your result — ${state.campaign.name}</p>
+      <div class="metric-grid">
+        <div class="metric"><div class="m-label">Your score</div><div class="m-value" style="color:${lvl.color};">${avg.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div>
+        ${prev?`<div class="metric"><div class="m-label">Previous (${prev.campaign})</div><div class="m-value">${prev.avg.toFixed(2)}</div><div class="m-sub">${deltaHtml(avg-prev.avg)} from last time</div></div>`:''}</div></div>`;
+    if(history.length>1){
+      cards+=`<div class="card" style="text-align:left;max-width:380px;margin:0 auto 1rem;"><p class="small" style="margin-bottom:.75rem;">Your personal history (this device)</p>`;
+      history.forEach(h=>{const hl=hudsonLevel(h.avg);cards+=`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--border);font-size:13px;"><span style="color:var(--text2);">${h.campaign}</span>${levelBadge(h.avg)}</div>`;});
+      cards+=`<p style="font-size:11px;color:var(--text3);margin-top:8px;">Personal history is stored on this device only and is not shared.</p></div>`;
+    }
+    document.getElementById('thankyou-cards').innerHTML=cards;
     showScreen('thankyou');
-  }catch(e){
-    errEl.textContent='Could not save your response. Please check your connection and try again. ('+e.message+')';
-    errEl.style.display='flex';
-  }
+  }catch(e){errEl.textContent='Could not save: '+e.message;errEl.style.display='flex';}
   btn.disabled=false;btn.innerHTML='Submit survey';
 });
 document.getElementById('btn-restart').addEventListener('click',()=>{
-  document.getElementById('login-team').value='';
-  document.getElementById('login-pass').value='';
-  document.getElementById('comment-text').value='';
-  showScreen('login');
+  document.getElementById('login-team').value='';document.getElementById('login-pass').value='';
+  document.getElementById('comment-text').value='';showScreen('login');
 });
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
 async function loadAdminView(){
-  const loadEl=document.getElementById('admin-loading');
-  const errEl=document.getElementById('admin-error');
-  const content=document.getElementById('admin-content');
-  loadEl.style.display='flex';errEl.style.display='none';content.style.display='none';
+  document.getElementById('admin-loading').style.display='flex';
+  document.getElementById('admin-error').style.display='none';
+  document.getElementById('admin-content').style.display='none';
   try{
-    allResponses=await dbFetch();
-    renderAdmin(allResponses);
-    loadEl.style.display='none';content.style.display='block';
+    allCampaigns=await sbGet('campaigns','select=*&order=created_at.asc');
+    allResponses=await sbGet('survey_responses','select=*&order=created_at.asc');
+    renderCampaignAdmin();
+    populateCampaignFilter();
+    renderAdmin();
+    document.getElementById('admin-loading').style.display='none';
+    document.getElementById('admin-content').style.display='block';
   }catch(e){
-    loadEl.style.display='none';
-    errEl.textContent='Failed to load responses: '+e.message;
-    errEl.style.display='flex';
+    document.getElementById('admin-loading').style.display='none';
+    const errEl=document.getElementById('admin-error');errEl.textContent='Failed to load: '+e.message;errEl.style.display='flex';
   }
 }
 
-function renderAdmin(responses){
-  const f=document.getElementById('filter-team').value;
-  const filtered=f==='all'?responses:responses.filter(r=>r.team===f);
-  renderOverview(filtered);renderRadar(filtered);renderDimensions(filtered);
-  renderHeatmap(filtered);renderTeamComparison(responses);
-  renderInsights(filtered);renderRespondents(filtered);renderComments(filtered);
-}
-
-function calcDimAvgs(responses){
-  const totals={},counts={};
-  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{totals[k]=(totals[k]||0)+r.dim_avgs[k];counts[k]=(counts[k]||0)+1;});});
-  const out={};SECTIONS.forEach((_,i)=>{out[i]=counts[i]?totals[i]/counts[i]:null;});return out;
-}
-function calcQAvgs(responses){
-  const out={};
-  QUESTIONS.forEach(q=>{const s=responses.map(r=>r.answers?r.answers[q.id]:null).filter(Boolean);out[q.id]=s.length?s.reduce((a,b)=>a+b,0)/s.length:null;});
-  return out;
-}
-function scoreColor(v){if(v===null)return'var(--border)';if(v<2)return'#fcebeb';if(v<3)return'#faeeda';if(v<4)return'#e6f1fb';if(v<4.5)return'#eaf3de';return'#e1f5ee';}
-function scoreTextColor(v){if(v===null)return'var(--text3)';if(v<2)return'#a32d2d';if(v<3)return'#854f0b';if(v<4)return'#185fa5';if(v<4.5)return'#3b6d11';return'#0f6e56';}
-
-function renderOverview(responses){
-  const el=document.getElementById('tab-overview');
-  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
-  const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
-  const lvl=hudsonLevel(overall);
-  const nextScore=overall<2?2:overall<3?3:overall<4?4:overall<4.5?4.5:5;
-  const gap=(nextScore-overall).toFixed(2);
-  const nextLabel=overall<2?'Reactive':overall<3?'Calculative':overall<4?'Proactive':overall<4.5?'Generative':'Generative';
-  const bands=[0,0,0,0,0];
-  responses.forEach(r=>{const i=Math.min(4,Math.max(0,Math.floor(r.avg_score-0.001)));bands[i]++;});
-  const maxBand=Math.max(...bands,1);
-  const bLabels=['Pathological','Reactive','Calculative','Proactive','Generative'];
-  const bBg=['#fcebeb','#faeeda','#e6f1fb','#eaf3de','#e1f5ee'];
-  const bTc=['#a32d2d','#854f0b','#185fa5','#3b6d11','#0f6e56'];
-  let distBars='';
-  bands.forEach((n,i)=>{const pct=n/maxBand*100;distBars+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;"><span style="width:90px;color:var(--text2);text-align:right;">${bLabels[i]}</span><div style="flex:1;height:20px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${bBg[i]};border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">${n>0?`<span style="font-size:11px;font-weight:700;color:${bTc[i]};">${n}</span>`:''}</div></div><span style="width:20px;color:var(--text3);font-size:12px;">${n}</span></div>`;});
-  let teamRows='';
-  TEAMS.forEach(t=>{const tr=responses.filter(r=>r.team===t);if(!tr.length)return;const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;teamRows+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;">${teamBadge(t)}<span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span><span style="margin-left:auto;">${levelBadge(ta)}</span></div>`;});
-  const dimAvgs=calcDimAvgs(responses);
-  let dimBars='';
-  SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];dimBars+=`<div class="dim-row"><span style="flex:1;">${name}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});
-  el.innerHTML=`<div class="metric-grid"><div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div><div class="metric"><div class="m-label">Overall score</div><div class="m-value" style="color:${lvl.color};">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div><div class="metric"><div class="m-label">Gap to next level</div><div class="m-value">${gap}</div><div class="m-sub">points to ${nextLabel}</div></div></div>
-  <div class="card"><h3 style="margin-bottom:8px;">Current maturity level</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;"><span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span>${overall<5?`<span style="font-size:13px;color:var(--text2);">Next: <strong>${nextLabel}</strong> — ${gap} points away</span>`:''}</div><div style="margin-bottom:6px;font-size:12px;color:var(--text2);">Progress to Generative</div><div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:10px;"><div style="width:${(overall/5*100).toFixed(1)}%;height:100%;background:${lvl.color};border-radius:4px;"></div></div><div style="font-size:12px;color:var(--text2);">1–1.9 Pathological · 2–2.9 Reactive · 3–3.9 Calculative · 4–4.4 Proactive · 4.5–5 Generative</div>${teamRows?`<div style="margin-top:14px;border-top:0.5px solid var(--border);padding-top:10px;">${teamRows}</div>`:''}</div>
-  <div class="card"><h3 style="margin-bottom:10px;">Response distribution</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">How individual scores are spread across maturity levels</p>${distBars}</div>
-  <div class="card"><h3 style="margin-bottom:12px;">Score by dimension</h3>${dimBars}</div>`;
-}
-
-function renderRadar(responses){
-  const el=document.getElementById('tab-radar');
-  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
-  const dimAvgs=calcDimAvgs(responses);
-  const data=SECTIONS.map((_,i)=>dimAvgs[i]||0);
-  const n=9,cx=170,cy=170,r=120;
-  const angleStep=2*Math.PI/n;
-  function pt(val,i){const a=i*angleStep-Math.PI/2,rv=r*(val/5);return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
-  function ptL(i){const a=i*angleStep-Math.PI/2,rv=r+30;return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
-  let rings='';
-  [1,2,3,4,5].forEach(v=>{const pts=Array.from({length:n},(_,i)=>pt(v,i));const d=pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';rings+=`<path d="${d}" fill="none" stroke="var(--border)" stroke-width="${v===4?1.5:0.5}" stroke-dasharray="${v===4?'4,3':''}"/><text x="${(cx+r*(v/5)+4).toFixed(1)}" y="${(cy+3).toFixed(1)}" font-size="9" fill="var(--text3)">${v}</text>`;});
-  let spokes='';for(let i=0;i<n;i++){const p=pt(5,i);spokes+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="var(--border)" stroke-width="0.5"/>`;}
-  const dpts=data.map((v,i)=>pt(Math.max(v,0.1),i));
-  const dpoly=dpts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';
-  const avgForColor=data.filter(v=>v>0).reduce((a,b)=>a+b,0)/data.filter(v=>v>0).length||1;
-  const cl=hudsonLevel(avgForColor);
-  let lbls='';
-  SECTIONS.forEach((s,i)=>{const p=ptL(i);const words=s.split(' ');const lines=[];let cur='';words.forEach(w=>{if((cur+' '+w).trim().length>13){lines.push(cur.trim());cur=w;}else cur=(cur+' '+w).trim();});if(cur)lines.push(cur);const lh=11,sy=p.y-(lines.length-1)*lh/2;lines.forEach((ln,li)=>{lbls+=`<text x="${p.x.toFixed(1)}" y="${(sy+li*lh).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--text2)">${ln}</text>`;});});
-  let dots='';dpts.forEach((p,i)=>{dots+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${scoreTextColor(data[i])}" stroke="var(--bg)" stroke-width="1.5"/>`;});
-  const svg=`<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:0 auto;">${rings}${spokes}<path d="${dpoly}" fill="${cl.bg}" fill-opacity="0.55" stroke="${cl.color}" stroke-width="2"/>${dots}${lbls}</svg>`;
-
-  let barHtml='';
-  SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];if(avg===null)return;const gap=Math.max(0,4.0-avg);const pct=(avg/5*100).toFixed(1);barHtml+=`<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>${name}</span><span style="font-weight:600;color:${scoreTextColor(avg)};">${avg.toFixed(2)} <span style="font-weight:400;color:var(--text3);font-size:12px;">${avg<4?'gap to proactive: '+gap.toFixed(2):'✓ at proactive threshold'}</span></span></div><div style="height:10px;background:var(--bg3);border-radius:5px;overflow:visible;position:relative;"><div style="width:${pct}%;height:100%;background:${scoreTextColor(avg)};border-radius:5px;opacity:0.8;"></div><div style="position:absolute;top:-3px;left:${(4/5*100).toFixed(1)}%;width:2px;height:16px;background:var(--text2);border-radius:1px;" title="Proactive threshold (4.0)"></div></div></div>`;});
-
-  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Radar — dimension scores</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">Each axis represents one dimension (1=centre, 5=outer). The dashed ring marks the Proactive threshold (4.0).</p>${svg}</div><div class="card"><h3 style="margin-bottom:4px;">Gap to Proactive threshold (4.0)</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">The vertical line marks score 4.0 — the minimum for Proactive. Bars to the left of the line need improvement.</p>${barHtml}</div>`;
-}
-
-function renderDimensions(responses){
-  const el=document.getElementById('tab-dimensions');
-  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
-  const dimAvgs=calcDimAvgs(responses);const qAvgs=calcQAvgs(responses);
+function renderCampaignAdmin(){
+  const el=document.getElementById('campaign-admin-list');
+  if(!allCampaigns.length){el.innerHTML='<p class="muted" style="font-size:13px;">No campaigns yet. Create one above.</p>';return;}
   let html='';
-  SECTIONS.forEach((name,idx)=>{
-    const dimAvg=dimAvgs[idx];const lvlD=dimAvg!=null?hudsonLevel(dimAvg):null;
-    let qRows='';
-    QUESTIONS.filter(q=>q.s===idx).forEach(q=>{const avg=qAvgs[q.id];qRows+=`<div class="dim-row" style="font-size:13px;"><span style="flex:1;color:var(--text2);">${q.title}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});
-    html+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;"><h3>${name}</h3>${lvlD?levelBadge(dimAvg):''}</div>${qRows}</div>`;
+  allCampaigns.forEach(c=>{
+    const count=allResponses.filter(r=>r.campaign_id===c.id).length;
+    const avg=count?allResponses.filter(r=>r.campaign_id===c.id).reduce((a,r)=>a+r.avg_score,0)/count:null;
+    const status=c.is_active?'<span class="campaign-pill campaign-active">● Active</span>':'<span class="campaign-pill campaign-closed">Closed</span>';
+    html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:.5px solid var(--border);flex-wrap:wrap;gap:8px;">
+      <div><span style="font-weight:500;font-size:14px;">${c.name}</span> &nbsp;${status}</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
+        <span style="color:var(--text2);">${count} response${count!==1?'s':''}</span>
+        ${avg?levelBadge(avg):''}
+        <button class="btn" style="font-size:12px;padding:5px 10px;" onclick="toggleCampaign(${c.id},${c.is_active})">${c.is_active?'Close':'Reopen'}</button>
+        <button class="btn danger" style="font-size:12px;padding:5px 10px;" onclick="deleteCampaign(${c.id},'${c.name.replace(/'/g,"\\'")}')">Delete</button>
+      </div>
+    </div>`;
   });
   el.innerHTML=html;
 }
 
+function populateCampaignFilter(){
+  const sel=document.getElementById('filter-campaign');
+  const current=sel.value;
+  sel.innerHTML='<option value="all">All campaigns</option>';
+  allCampaigns.forEach(c=>{sel.innerHTML+=`<option value="${c.id}">${c.name}</option>`;});
+  if(current)sel.value=current;
+}
+
+// New campaign form
+document.getElementById('btn-show-new-campaign').addEventListener('click',()=>{document.getElementById('new-campaign-form').style.display='block';document.getElementById('new-campaign-name').focus();});
+document.getElementById('btn-cancel-campaign').addEventListener('click',()=>{document.getElementById('new-campaign-form').style.display='none';document.getElementById('new-campaign-name').value='';});
+document.getElementById('btn-create-campaign').addEventListener('click',async()=>{
+  const name=document.getElementById('new-campaign-name').value.trim();
+  const errEl=document.getElementById('campaign-create-error');
+  if(!name){errEl.textContent='Please enter a campaign name.';errEl.style.display='block';return;}
+  try{
+    await sbPost('campaigns',{name,is_active:true});
+    document.getElementById('new-campaign-form').style.display='none';
+    document.getElementById('new-campaign-name').value='';
+    errEl.style.display='none';
+    await loadAdminView();
+  }catch(e){errEl.textContent='Error: '+e.message;errEl.style.display='block';}
+});
+
+async function toggleCampaign(id,currentlyActive){
+  try{await sbPatch('campaigns','id=eq.'+id,{is_active:!currentlyActive});await loadAdminView();}
+  catch(e){alert('Error: '+e.message);}
+}
+
+async function deleteCampaign(id,name){
+  if(!confirm(`Delete campaign "${name}" and ALL its responses? This cannot be undone.`))return;
+  try{
+    await sbDelete('survey_responses','campaign_id=eq.'+id);
+    await sbDelete('campaigns','id=eq.'+id);
+    await loadAdminView();
+  }catch(e){alert('Error: '+e.message);}
+}
+
+function getFilteredResponses(){
+  const cf=document.getElementById('filter-campaign').value;
+  const tf=document.getElementById('filter-team').value;
+  let r=allResponses;
+  if(cf!=='all')r=r.filter(x=>x.campaign_id==cf);
+  if(tf!=='all')r=r.filter(x=>x.team===tf);
+  return r;
+}
+
+function renderAdmin(){
+  const responses=getFilteredResponses();
+  renderOverview(responses);renderTrends();renderRadar(responses);renderDimensions(responses);
+  renderHeatmap(responses);renderTeamComparison(responses);renderInsights(responses);
+  renderRespondents(responses);renderComments(responses);
+}
+
+// ── OVERVIEW ──────────────────────────────────────────────────────────────────
+function renderOverview(responses){
+  const el=document.getElementById('tab-overview');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses for this filter.</p>';return;}
+  const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
+  const lvl=hudsonLevel(overall);
+  const nextScore=overall<2?2:overall<3?3:overall<4?4:overall<4.5?4.5:5;
+  const gap=(nextScore-overall).toFixed(2);
+  const nextLabel=overall>=4.5?'Generative':overall>=4?'Generative':overall>=3?'Proactive':overall>=2?'Calculative':'Reactive';
+  const bands=[0,0,0,0,0];responses.forEach(r=>{const i=Math.min(4,Math.max(0,Math.floor(r.avg_score-0.001)));bands[i]++;});
+  const maxBand=Math.max(...bands,1);
+  const bL=['Pathological','Reactive','Calculative','Proactive','Generative'];
+  const bBg=['#fcebeb','#faeeda','#e6f1fb','#eaf3de','#e1f5ee'];
+  const bTc=['#a32d2d','#854f0b','#185fa5','#3b6d11','#0f6e56'];
+  let distBars='';bands.forEach((n,i)=>{const pct=n/maxBand*100;distBars+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;"><span style="width:90px;color:var(--text2);text-align:right;">${bL[i]}</span><div style="flex:1;height:20px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${bBg[i]};border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">${n>0?`<span style="font-size:11px;font-weight:700;color:${bTc[i]};">${n}</span>`:''}</div></div><span style="width:20px;color:var(--text3);font-size:12px;">${n}</span></div>`;});
+  let teamRows='';TEAMS.forEach(t=>{const tr=responses.filter(r=>r.team===t);if(!tr.length)return;const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;teamRows+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px;">${teamBadge(t)}<span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span><span style="margin-left:auto;">${levelBadge(ta)}</span></div>`;});
+  const dimAvgs=calcDimAvgs(responses);
+  let dimBars='';SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];dimBars+=`<div class="dim-row"><span style="flex:1;">${name}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});
+  el.innerHTML=`<div class="metric-grid"><div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div><div class="metric"><div class="m-label">Overall score</div><div class="m-value" style="color:${lvl.color};">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div><div class="metric"><div class="m-label">Gap to next level</div><div class="m-value">${gap}</div><div class="m-sub">points to ${nextLabel}</div></div></div>
+  <div class="card"><h3 style="margin-bottom:8px;">Maturity level</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;"><span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span></div><div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:10px;"><div style="width:${(overall/5*100).toFixed(1)}%;height:100%;background:${lvl.color};border-radius:4px;"></div></div><div style="font-size:12px;color:var(--text2);">1–1.9 Pathological · 2–2.9 Reactive · 3–3.9 Calculative · 4–4.4 Proactive · 4.5–5 Generative</div>${teamRows?`<div style="margin-top:14px;border-top:.5px solid var(--border);padding-top:10px;">${teamRows}</div>`:''}</div>
+  <div class="card"><h3 style="margin-bottom:10px;">Response distribution</h3>${distBars}</div>
+  <div class="card"><h3 style="margin-bottom:12px;">Score by dimension</h3>${dimBars}</div>`;
+}
+
+// ── TRENDS ────────────────────────────────────────────────────────────────────
+function renderTrends(){
+  const el=document.getElementById('tab-trends');
+  // get campaigns sorted by created_at, compute averages per campaign
+  const campaignsSorted=[...allCampaigns].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  if(campaignsSorted.length<1){el.innerHTML='<p class="muted" style="padding:1rem 0;">Trends will appear once you have responses across multiple campaigns.</p>';return;}
+
+  // overall trend data
+  const trendData=campaignsSorted.map(c=>{
+    const rs=allResponses.filter(r=>r.campaign_id===c.id);
+    const avg=rs.length?rs.reduce((a,r)=>a+r.avg_score,0)/rs.length:null;
+    const dimAvgs=calcDimAvgs(rs);
+    return{name:c.name,count:rs.length,avg,dimAvgs,responses:rs};
+  }).filter(d=>d.avg!==null);
+
+  if(!trendData.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+
+  // SVG line chart for overall trend
+  const chartW=560,chartH=200,padL=45,padR=20,padT=20,padB=30;
+  const innerW=chartW-padL-padR,innerH=chartH-padT-padB;
+  const n=trendData.length;
+  const minScore=1,maxScore=5;
+  function xPos(i){return padL+i*(innerW/(Math.max(n-1,1)));}
+  function yPos(v){return padT+innerH-(((v-minScore)/(maxScore-minScore))*innerH);}
+
+  // grid lines at each level
+  let grid='';[[1,'Pathological','#a32d2d'],[2,'Reactive','#854f0b'],[3,'Calculative','#185fa5'],[4,'Proactive','#3b6d11'],[4.5,'Generative','#0f6e56']].forEach(([v,label,col])=>{
+    const y=yPos(v);grid+=`<line x1="${padL}" y1="${y.toFixed(1)}" x2="${chartW-padR}" y2="${y.toFixed(1)}" stroke="${col}" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.5"/><text x="${padL-4}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="9" fill="${col}">${v}</text>`;
+  });
+
+  // line path
+  const pts=trendData.map((d,i)=>({x:xPos(i),y:yPos(d.avg)}));
+  const linePath=pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+
+  // dots and labels
+  let dotsHtml='';
+  trendData.forEach((d,i)=>{
+    const p=pts[i];const lvl=hudsonLevel(d.avg);
+    dotsHtml+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="${lvl.color}" stroke="var(--bg)" stroke-width="2"/>`;
+    dotsHtml+=`<text x="${p.x.toFixed(1)}" y="${(p.y-10).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="600" fill="${lvl.color}">${d.avg.toFixed(2)}</text>`;
+    dotsHtml+=`<text x="${p.x.toFixed(1)}" y="${(chartH-padB+14).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--text2)">${d.name.length>10?d.name.substring(0,9)+'…':d.name}</text>`;
+    dotsHtml+=`<text x="${p.x.toFixed(1)}" y="${(chartH-padB+24).toFixed(1)}" text-anchor="middle" font-size="8" fill="var(--text3)">${d.count} resp.</text>`;
+  });
+
+  const overallSvg=`<svg viewBox="0 0 ${chartW} ${chartH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;">${grid}<path d="${linePath}" fill="none" stroke="var(--text)" stroke-width="2"/>${dotsHtml}</svg>`;
+
+  // Dimension trends table — show all campaigns as columns
+  let dimTrendTable=`<table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="text-align:left;padding:6px 4px;color:var(--text2);font-weight:500;border-bottom:.5px solid var(--border);min-width:140px;">Dimension</th>`;
+  trendData.forEach(d=>{dimTrendTable+=`<th style="text-align:center;padding:6px 8px;border-bottom:.5px solid var(--border);font-size:11px;color:var(--text2);">${d.name}</th>`;});
+  if(trendData.length>1)dimTrendTable+=`<th style="text-align:center;padding:6px 8px;border-bottom:.5px solid var(--border);font-size:11px;color:var(--text2);">Change</th>`;
+  dimTrendTable+='</tr></thead><tbody>';
+
+  SECTIONS.forEach((name,idx)=>{
+    dimTrendTable+=`<tr><td style="padding:7px 4px;border-bottom:.5px solid var(--border);font-size:13px;color:var(--text2);">${name}</td>`;
+    const vals=trendData.map(d=>d.dimAvgs[idx]);
+    vals.forEach(v=>{dimTrendTable+=`<td style="text-align:center;padding:7px 8px;border-bottom:.5px solid var(--border);">${v!=null?`<span style="font-weight:700;color:${scoreTextColor(v)};background:${scoreColor(v)};padding:2px 8px;border-radius:4px;">${v.toFixed(1)}</span>`:'<span style="color:var(--text3);">—</span>'}</td>`;});
+    if(trendData.length>1){const first=vals.find(v=>v!=null);const last=[...vals].reverse().find(v=>v!=null);const delta=(first!=null&&last!=null&&first!==last)?last-first:null;dimTrendTable+=`<td style="text-align:center;padding:7px 8px;border-bottom:.5px solid var(--border);">${delta!==null?deltaHtml(delta):'—'}</td>`;}
+    dimTrendTable+='</tr>';
+  });
+  dimTrendTable+='</tbody></table>';
+
+  // improvement / regression summary
+  let changeRows='';
+  if(trendData.length>1){
+    const first=trendData[0];const last=trendData[trendData.length-1];
+    const overallDelta=last.avg-first.avg;
+    const dimDeltas=SECTIONS.map((name,idx)=>{const f=first.dimAvgs[idx];const l=last.dimAvgs[idx];return{name,delta:(f!=null&&l!=null)?l-f:null};}).filter(d=>d.delta!==null).sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
+    const improved=dimDeltas.filter(d=>d.delta>0.05).slice(0,3);
+    const regressed=dimDeltas.filter(d=>d.delta<-0.05).slice(0,3);
+    changeRows=`<div class="metric-grid" style="margin-bottom:1rem;">
+      <div class="metric"><div class="m-label">Overall change</div><div class="m-value">${deltaHtml(overallDelta)}</div><div class="m-sub">${first.name} → ${last.name}</div></div>
+      <div class="metric"><div class="m-label">Improved dimensions</div><div class="m-value" style="color:var(--success);">${improved.length}</div></div>
+      <div class="metric"><div class="m-label">Regressed dimensions</div><div class="m-value" style="color:${regressed.length>0?'var(--danger)':'var(--text)'};">${regressed.length}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem;">
+      <div class="card"><h3 style="color:var(--success);margin-bottom:8px;">▲ Most improved</h3>${improved.length?improved.map(d=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--border);font-size:13px;"><span style="color:var(--text2);">${d.name}</span>${deltaHtml(d.delta)}</div>`).join(''):'<p class="small">No significant improvements yet.</p>'}</div>
+      <div class="card"><h3 style="color:var(--danger);margin-bottom:8px;">▼ Regressed</h3>${regressed.length?regressed.map(d=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--border);font-size:13px;"><span style="color:var(--text2);">${d.name}</span>${deltaHtml(d.delta)}</div>`).join(''):'<p class="small">No regressions detected.</p>'}</div>
+    </div>`;
+  }
+
+  el.innerHTML=`${changeRows}<div class="card"><h3 style="margin-bottom:4px;">Overall score trend</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Average score across all respondents per campaign. Dashed lines show Hudson level thresholds.</p>${overallSvg}</div>
+  <div class="card"><h3 style="margin-bottom:4px;">Dimension scores across campaigns</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Colour indicates maturity level. Final column shows net change from first to latest campaign.</p><div style="overflow-x:auto;">${dimTrendTable}</div></div>`;
+}
+
+// ── RADAR ─────────────────────────────────────────────────────────────────────
+function renderRadar(responses){
+  const el=document.getElementById('tab-radar');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses.</p>';return;}
+  const dimAvgs=calcDimAvgs(responses);const data=SECTIONS.map((_,i)=>dimAvgs[i]||0);
+  const n=9,cx=170,cy=170,r=120;const angleStep=2*Math.PI/n;
+  function pt(val,i){const a=i*angleStep-Math.PI/2,rv=r*(val/5);return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
+  function ptL(i){const a=i*angleStep-Math.PI/2,rv=r+30;return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
+  let rings='';[1,2,3,4,5].forEach(v=>{const pts=Array.from({length:n},(_,i)=>pt(v,i));const d=pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';rings+=`<path d="${d}" fill="none" stroke="var(--border)" stroke-width="${v===4?1.5:.5}" stroke-dasharray="${v===4?'4,3':''}"/><text x="${(cx+r*(v/5)+4).toFixed(1)}" y="${(cy+3).toFixed(1)}" font-size="9" fill="var(--text3)">${v}</text>`;});
+  let spokes='';for(let i=0;i<n;i++){const p=pt(5,i);spokes+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="var(--border)" stroke-width=".5"/>`;}
+  const dpts=data.map((v,i)=>pt(Math.max(v,.1),i));const dpoly=dpts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';
+  const cl=hudsonLevel(data.filter(v=>v>0).reduce((a,b)=>a+b,0)/data.filter(v=>v>0).length||1);
+  let lbls='';SECTIONS.forEach((s,i)=>{const p=ptL(i);const words=s.split(' ');const lines=[];let cur='';words.forEach(w=>{if((cur+' '+w).trim().length>13){lines.push(cur.trim());cur=w;}else cur=(cur+' '+w).trim();});if(cur)lines.push(cur);const lh=11,sy=p.y-(lines.length-1)*lh/2;lines.forEach((ln,li)=>{lbls+=`<text x="${p.x.toFixed(1)}" y="${(sy+li*lh).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--text2)">${ln}</text>`;});});
+  let dots='';dpts.forEach((p,i)=>{dots+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${scoreTextColor(data[i])}" stroke="var(--bg)" stroke-width="1.5"/>`;});
+  const svg=`<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;margin:0 auto;">${rings}${spokes}<path d="${dpoly}" fill="${cl.bg}" fill-opacity=".55" stroke="${cl.color}" stroke-width="2"/>${dots}${lbls}</svg>`;
+  let barHtml='';SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];if(avg===null)return;const gap=Math.max(0,4.0-avg);const pct=(avg/5*100).toFixed(1);barHtml+=`<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>${name}</span><span style="font-weight:600;color:${scoreTextColor(avg)};">${avg.toFixed(2)} <span style="font-weight:400;color:var(--text3);font-size:12px;">${avg<4?'gap: '+gap.toFixed(2):'✓'}</span></span></div><div style="height:10px;background:var(--bg3);border-radius:5px;overflow:visible;position:relative;"><div style="width:${pct}%;height:100%;background:${scoreTextColor(avg)};border-radius:5px;opacity:.8;"></div><div style="position:absolute;top:-3px;left:${(4/5*100).toFixed(1)}%;width:2px;height:16px;background:var(--text2);border-radius:1px;"></div></div></div>`;});
+  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Radar</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">Dashed ring = Proactive threshold (4.0).</p>${svg}</div><div class="card"><h3 style="margin-bottom:4px;">Gap to Proactive (4.0)</h3>${barHtml}</div>`;
+}
+
+// ── DIMENSIONS ────────────────────────────────────────────────────────────────
+function renderDimensions(responses){
+  const el=document.getElementById('tab-dimensions');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses.</p>';return;}
+  const dimAvgs=calcDimAvgs(responses);const qAvgs=calcQAvgs(responses);
+  let html='';
+  SECTIONS.forEach((name,idx)=>{const dimAvg=dimAvgs[idx];const lvlD=dimAvg!=null?hudsonLevel(dimAvg):null;let qRows='';QUESTIONS.filter(q=>q.s===idx).forEach(q=>{const avg=qAvgs[q.id];qRows+=`<div class="dim-row" style="font-size:13px;"><span style="flex:1;color:var(--text2);">${q.title}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});html+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;"><h3>${name}</h3>${lvlD?levelBadge(dimAvg):''}</div>${qRows}</div>`;});
+  el.innerHTML=html;
+}
+
+// ── HEATMAP ───────────────────────────────────────────────────────────────────
 function renderHeatmap(responses){
   const el=document.getElementById('tab-heatmap');
-  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses.</p>';return;}
   const qAvgs=calcQAvgs(responses);
   const sorted=[...QUESTIONS].filter(q=>qAvgs[q.id]!=null).sort((a,b)=>qAvgs[a.id]-qAvgs[b.id]);
   const weakest=sorted.slice(0,5);const strongest=sorted.slice(-5).reverse();
-  let heatRows='';
-  SECTIONS.forEach((sname,sidx)=>{
-    const sQs=QUESTIONS.filter(q=>q.s===sidx);
-    heatRows+=`<tr><td style="font-size:11px;color:var(--text2);padding:4px 8px 4px 0;white-space:nowrap;vertical-align:middle;border-bottom:0.5px solid var(--border);max-width:120px;">${sname}</td>`;
-    sQs.forEach(q=>{const v=qAvgs[q.id];heatRows+=`<td title="${q.title}: ${v?v.toFixed(2):'n/a'}" style="width:34px;height:30px;background:${scoreColor(v)};text-align:center;font-size:11px;font-weight:700;color:${scoreTextColor(v)};border:1px solid var(--bg);border-radius:3px;cursor:default;">${v?v.toFixed(1):'—'}</td>`;});
-    heatRows+='</tr>';
-  });
-  let weakHtml='',strongHtml='';
-  weakest.forEach(q=>{const v=qAvgs[q.id];weakHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};white-space:nowrap;">${v.toFixed(2)}</span></div>`;});
-  strongest.forEach(q=>{const v=qAvgs[q.id];strongHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};white-space:nowrap;">${v.toFixed(2)}</span></div>`;});
+  let heatRows='';SECTIONS.forEach((sname,sidx)=>{heatRows+=`<tr><td style="font-size:11px;color:var(--text2);padding:4px 8px 4px 0;white-space:nowrap;border-bottom:.5px solid var(--border);max-width:120px;">${sname}</td>`;QUESTIONS.filter(q=>q.s===sidx).forEach(q=>{const v=qAvgs[q.id];heatRows+=`<td title="${q.title}: ${v?v.toFixed(2):'n/a'}" style="width:34px;height:30px;background:${scoreColor(v)};text-align:center;font-size:11px;font-weight:700;color:${scoreTextColor(v)};border:1px solid var(--bg);border-radius:3px;">${v?v.toFixed(1):'—'}</td>`;});heatRows+='</tr>';});
   const legendPips=['Pathological','Reactive','Calculative','Proactive','Generative'].map((l,i)=>{const c=[['#fcebeb','#a32d2d'],['#faeeda','#854f0b'],['#e6f1fb','#185fa5'],['#eaf3de','#3b6d11'],['#e1f5ee','#0f6e56']];return`<span style="background:${c[i][0]};color:${c[i][1]};padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600;">${l}</span>`;}).join('');
-  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Question heatmap</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Each cell = average score for that question. Hover for question name. Colour = maturity level.</p><div style="overflow-x:auto;"><table style="border-collapse:separate;border-spacing:2px;">${heatRows}</table></div><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:11px;color:var(--text3);">Scale:</span>${legendPips}</div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-    <div class="card"><h3 style="margin-bottom:4px;color:#a32d2d;">▼ Priority areas</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 lowest-scoring questions</p>${weakHtml}</div>
-    <div class="card"><h3 style="margin-bottom:4px;color:#0f6e56;">▲ Strengths</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 highest-scoring questions</p>${strongHtml}</div>
-  </div>`;
+  let weakHtml='',strongHtml='';
+  weakest.forEach(q=>{const v=qAvgs[q.id];weakHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};">${v.toFixed(2)}</span></div>`;});
+  strongest.forEach(q=>{const v=qAvgs[q.id];strongHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};">${v.toFixed(2)}</span></div>`;});
+  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Question heatmap</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Hover cells for question name.</p><div style="overflow-x:auto;"><table style="border-collapse:separate;border-spacing:2px;">${heatRows}</table></div><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:11px;color:var(--text3);">Scale:</span>${legendPips}</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div class="card"><h3 style="margin-bottom:4px;color:#a32d2d;">▼ Priority areas</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 lowest scoring</p>${weakHtml}</div><div class="card"><h3 style="margin-bottom:4px;color:#0f6e56;">▲ Strengths</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 highest scoring</p>${strongHtml}</div></div>`;
 }
 
+// ── TEAM COMPARISON ───────────────────────────────────────────────────────────
 function renderTeamComparison(responses){
   const el=document.getElementById('tab-teams');
-  const teamsWithData=TEAMS.filter(t=>responses.some(r=>r.team===t));
-  if(!teamsWithData.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
-  let overallCards='';
-  teamsWithData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;const tl=hudsonLevel(ta);overallCards+=`<div class="metric" style="border-left:3px solid ${tl.color};"><div class="m-label">${teamBadge(t)} · ${tr.length} resp.</div><div class="m-value" style="color:${tl.color};">${ta.toFixed(2)}</div><div class="m-sub">${tl.label}</div></div>`;});
-  let dimTable=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr><th style="text-align:left;padding:6px 4px;color:var(--text2);font-weight:500;border-bottom:0.5px solid var(--border);">Dimension</th>`;
-  teamsWithData.forEach(t=>{dimTable+=`<th style="text-align:center;padding:6px 8px;border-bottom:0.5px solid var(--border);">${teamBadge(t)}</th>`;});
-  dimTable+='</tr></thead><tbody>';
-  SECTIONS.forEach((name,idx)=>{
-    dimTable+=`<tr><td style="padding:7px 4px;border-bottom:0.5px solid var(--border);color:var(--text2);font-size:13px;">${name}</td>`;
-    teamsWithData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const scores=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);const avg=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:null;dimTable+=`<td style="text-align:center;padding:7px 8px;border-bottom:0.5px solid var(--border);">${avg!=null?`<span style="font-weight:700;color:${scoreTextColor(avg)};background:${scoreColor(avg)};padding:2px 8px;border-radius:4px;">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</td>`;});
-    dimTable+='</tr>';
-  });
-  dimTable+='</tbody></table>';
+  const twData=TEAMS.filter(t=>responses.some(r=>r.team===t));
+  if(!twData.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses.</p>';return;}
+  let cards='';twData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;const tl=hudsonLevel(ta);cards+=`<div class="metric" style="border-left:3px solid ${tl.color};"><div class="m-label">${teamBadge(t)} · ${tr.length} resp.</div><div class="m-value" style="color:${tl.color};">${ta.toFixed(2)}</div><div class="m-sub">${tl.label}</div></div>`;});
+  let table=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr><th style="text-align:left;padding:6px 4px;color:var(--text2);font-weight:500;border-bottom:.5px solid var(--border);">Dimension</th>`;twData.forEach(t=>{table+=`<th style="text-align:center;padding:6px 8px;border-bottom:.5px solid var(--border);">${teamBadge(t)}</th>`;});table+='</tr></thead><tbody>';
+  SECTIONS.forEach((name,idx)=>{table+=`<tr><td style="padding:7px 4px;border-bottom:.5px solid var(--border);color:var(--text2);">${name}</td>`;twData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const sc=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);const avg=sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null;table+=`<td style="text-align:center;padding:7px 8px;border-bottom:.5px solid var(--border);">${avg!=null?`<span style="font-weight:700;color:${scoreTextColor(avg)};background:${scoreColor(avg)};padding:2px 8px;border-radius:4px;">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</td>`;});table+='</tr>';});table+='</tbody></table>';
   let varianceHtml='';
-  if(teamsWithData.length>1){
-    const varData=[];
-    SECTIONS.forEach((name,idx)=>{const avgs=teamsWithData.map(t=>{const tr=responses.filter(r=>r.team===t);const sc=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);return sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null;}).filter(v=>v!=null);if(avgs.length>1)varData.push({name,spread:Math.max(...avgs)-Math.min(...avgs)});});
-    varData.sort((a,b)=>b.spread-a.spread);
-    if(varData.length){varianceHtml=`<div class="card"><h3 style="margin-bottom:4px;">Largest gaps between teams</h3><p class="muted" style="font-size:13px;margin-bottom:10px;">Dimensions where teams differ most — may need team-specific interventions rather than a single approach.</p>`;varData.slice(0,5).forEach(d=>{varianceHtml+=`<div class="dim-row"><span style="flex:1;font-size:13px;">${d.name}</span><span style="font-size:13px;font-weight:600;color:${d.spread>1?'#a32d2d':d.spread>0.5?'#854f0b':'#3b6d11'};">Δ ${d.spread.toFixed(2)}</span></div>`;});varianceHtml+='</div>';}
-  }
-  el.innerHTML=`<div class="metric-grid">${overallCards}</div><div class="card"><h3 style="margin-bottom:12px;">Dimension scores by team</h3>${dimTable}</div>${varianceHtml}`;
+  if(twData.length>1){const varData=[];SECTIONS.forEach((name,idx)=>{const avgs=twData.map(t=>{const tr=responses.filter(r=>r.team===t);const sc=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);return sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null;}).filter(v=>v!=null);if(avgs.length>1)varData.push({name,spread:Math.max(...avgs)-Math.min(...avgs)});});varData.sort((a,b)=>b.spread-a.spread);if(varData.length){varianceHtml=`<div class="card"><h3 style="margin-bottom:4px;">Largest gaps between teams</h3><p class="muted" style="font-size:13px;margin-bottom:10px;">These dimensions may need team-specific interventions.</p>`;varData.slice(0,5).forEach(d=>{varianceHtml+=`<div class="dim-row"><span style="flex:1;font-size:13px;">${d.name}</span><span style="font-size:13px;font-weight:600;color:${d.spread>1?'#a32d2d':d.spread>.5?'#854f0b':'#3b6d11'};">Δ ${d.spread.toFixed(2)}</span></div>`;});varianceHtml+='</div>';}}
+  el.innerHTML=`<div class="metric-grid">${cards}</div><div class="card"><h3 style="margin-bottom:12px;">Dimension scores by team</h3><div style="overflow-x:auto;">${table}</div></div>${varianceHtml}`;
 }
 
+// ── INSIGHTS ──────────────────────────────────────────────────────────────────
 function renderInsights(responses){
   const el=document.getElementById('tab-insights');
-  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses.</p>';return;}
   const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
-  const lvl=hudsonLevel(overall);
-  const dimAvgs=calcDimAvgs(responses);
-  const qAvgs=calcQAvgs(responses);
+  const lvl=hudsonLevel(overall);const dimAvgs=calcDimAvgs(responses);const qAvgs=calcQAvgs(responses);
   const dimRanked=SECTIONS.map((name,i)=>({name,i,avg:dimAvgs[i]||0})).sort((a,b)=>a.avg-b.avg);
   const weakDims=dimRanked.slice(0,3);const strongDims=dimRanked.slice(-3).reverse();
-  const scores=responses.map(r=>r.avg_score);
-  const mean=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const scores=responses.map(r=>r.avg_score);const mean=scores.reduce((a,b)=>a+b,0)/scores.length;
   const stdDev=Math.sqrt(scores.reduce((a,b)=>a+(b-mean)**2,0)/scores.length);
-  const consistencyMsg=stdDev<0.5?'Responses are highly consistent — broad agreement across the team about the current safety culture level.'
-    :stdDev<1.0?'Moderate variation suggests different parts of the team may be experiencing safety culture differently. Review team-level breakdowns.'
-    :'High variation indicates significant differences in safety culture experience across the team. Structured conversations are recommended to understand the gaps.';
-
-  const levelContent={
-    'Pathological':{summary:'The organisation is at the earliest stage of safety culture. Safety is not yet a business priority and reactive responses dominate.',chars:['Incidents hidden or minimised','Leadership rarely engages with safety','Workers fear reporting problems','No consistent safety systems in place'],priorities:['Establish visible leadership commitment — senior leaders must personally and consistently signal that safety matters','Create a reporting system where workers can raise concerns without fear of punishment','Implement basic safety procedures and ensure they are clearly communicated to all','Begin tracking incident and near-miss data to establish a baseline'],quote:'"The most important ingredient in moving up the ladder is the commitment and actions of leadership." — Hudson'},
-    'Reactive':{summary:'The organisation responds to safety events but does not yet anticipate or prevent them. Safety culture is emerging but relies on incidents as triggers for action.',chars:['Safety action driven by incidents rather than prevention','Leadership engaged after events, not before','Workers aware of safety but not empowered to act','Procedures exist but compliance is inconsistent'],priorities:['Shift from incident-response to hazard anticipation — implement proactive hazard identification','Build psychological safety so workers report near-misses without fear of blame','Develop structured investigation processes that find system causes, not individual blame','Invest in stop-work authority — ensure every worker knows they can and should stop unsafe work'],quote:'"Safety is important — we do a lot every time we have an accident." — Hudson'},
-    'Calculative':{summary:'Systems and processes are in place and safety data is tracked. The risk here is becoming stuck — having impressive metrics without genuine cultural engagement.',chars:['Safety managed through procedures and KPIs','Compliance-focused rather than care-focused','Workers fulfil obligations without genuine belief in safety value','Risk of the "calculative trap" — data without behaviour change'],priorities:['Move beyond compliance — create forums where workers genuinely discuss and solve safety problems','Strengthen workforce engagement: workers should co-design safety improvements, not just follow rules','Focus investigations on systemic causes — break the pattern of individual blame','Shift to leading indicators (near-miss rates, hazard reports) not just lagging ones (injury rates)'],quote:'"Many organisations become stuck at the calculative level — like tracking health metrics but never making lifestyle changes." — Cairn Risk, 2025'},
-    'Proactive':{summary:'Safety is embedded in operations and the organisation actively anticipates risk. The focus should be on sustaining this and driving toward full integration.',chars:['Workers actively identify and report hazards','Leadership visible and genuinely engaged','Safety considered in all major decisions','Learning from near-misses is routine'],priorities:['Build chronic unease — high-performing organisations never assume everything is safe, even when performance appears good','Extend this culture to contractors — ensure they operate to the same standard, not a lower one','Develop safety leadership capability at all levels, not just in the safety team','Implement regular re-surveys (every 12–18 months) to track cultural progress'],quote:'"A balanced approach is taken to all risks — how can we help you make your job safer?" — Cairn Risk, 2025'},
-    'Generative':{summary:'Safety is fully integrated into how the organisation operates. This represents best-in-class safety culture. The focus is on sustaining and continuously challenging this standard.',chars:['Safety indistinguishable from how work gets done','Chronic unease maintained even during periods of good performance','Workers at all levels lead safety improvement','Learning shared rapidly across the whole organisation'],priorities:['Maintain vigilance — guard against complacency and the assumption that past success eliminates future risk','Share learning externally — contribute to industry-wide knowledge','Mentor teams at lower maturity levels within the organisation','Continue to survey and benchmark — culture can regress without active maintenance'],quote:'"What might we be missing in our safety systems?" — the generative mindset'}
-  };
-  const c=levelContent[lvl.label]||levelContent['Reactive'];
-
-  let weakDimHtml='';
-  weakDims.forEach(d=>{
-    const dl=hudsonLevel(d.avg);const nextL=d.avg<2?'Reactive':d.avg<3?'Calculative':d.avg<4?'Proactive':d.avg<4.5?'Generative':'Generative';const gap=(Math.min(d.avg<2?2:d.avg<3?3:d.avg<4?4:d.avg<4.5?4.5:5,5)-d.avg).toFixed(2);
-    let qRows=QUESTIONS.filter(q=>q.s===d.i).sort((a,b)=>(qAvgs[a.id]||0)-(qAvgs[b.id]||0)).slice(0,3).map(q=>{const v=qAvgs[q.id];return`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;"><span style="color:var(--text2);">${q.title}</span><span style="font-weight:600;color:${scoreTextColor(v)};">${v?v.toFixed(1):'—'}</span></div>`;}).join('');
-    weakDimHtml+=`<div class="card" style="border-left:3px solid ${dl.color};margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:6px;"><h3>${d.name}</h3>${levelBadge(d.avg)}</div><p style="font-size:13px;color:var(--text2);margin-bottom:8px;">${gap} points to ${nextL}. Focus on lowest-scoring questions first:</p>${qRows}</div>`;
-  });
-
-  let strengthHtml=strongDims.map(d=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;">${d.name}</span>${levelBadge(d.avg)}</div>`).join('');
-
+  const lC={'Pathological':{summary:'Safety is not yet a business priority and reactive responses dominate.',chars:['Incidents hidden or minimised','Leadership rarely engages with safety','Workers fear reporting problems','No consistent safety systems'],priorities:['Establish visible leadership commitment — senior leaders must personally signal that safety matters','Create a reporting system where workers can raise concerns without fear','Implement basic safety procedures and communicate them clearly','Begin tracking incident and near-miss data to establish a baseline'],quote:'"The most important ingredient in moving up the ladder is the commitment of leadership." — Hudson'},
+  'Reactive':{summary:'The organisation responds to safety events but does not yet anticipate them.',chars:['Safety action driven by incidents','Leadership engaged after events, not before','Workers aware of safety but not empowered','Procedures exist but compliance inconsistent'],priorities:['Shift from incident-response to hazard anticipation — implement proactive hazard identification','Build psychological safety so workers report near-misses without fear of blame','Develop investigation processes that find system causes, not individual blame','Invest in stop-work authority — every worker must know they can stop unsafe work'],quote:'"Safety is important — we do a lot every time we have an accident." — Hudson'},
+  'Calculative':{summary:'Systems are in place but the risk is becoming stuck — impressive metrics without genuine cultural engagement.',chars:['Safety managed through procedures and KPIs','Compliance-focused rather than care-focused','Workers fulfil obligations without genuine belief','Risk of the calculative trap'],priorities:['Move beyond compliance — create forums where workers genuinely solve safety problems','Strengthen workforce engagement: workers should co-design improvements, not just follow rules','Focus investigations on systemic causes — break the pattern of individual blame','Shift to leading indicators (near-miss rates, hazard reports) not just lagging ones'],quote:'"Like tracking health metrics but never making lifestyle changes." — Cairn Risk, 2025'},
+  'Proactive':{summary:'Safety is embedded in operations. The focus should be on sustaining this and driving toward full integration.',chars:['Workers actively identify and report hazards','Leadership visible and genuinely engaged','Safety considered in all major decisions','Learning from near-misses is routine'],priorities:['Build chronic unease — never assume everything is safe even when things appear to be running well','Extend this culture to contractors — same standard, not a lower one','Develop safety leadership at all levels, not just in the safety team','Re-survey every 12–18 months to track cultural progress'],quote:'"How can we help you make your job safer?" — Cairn Risk, 2025'},
+  'Generative':{summary:'Safety is fully integrated. The focus is on sustaining and continuously challenging this standard.',chars:['Safety indistinguishable from how work gets done','Chronic unease maintained even during good periods','Workers at all levels lead safety improvement','Learning shared rapidly across the organisation'],priorities:['Maintain vigilance — guard against complacency','Share learning externally — contribute to industry knowledge','Mentor teams at lower maturity levels','Continue to survey and benchmark — culture can regress'],quote:'"What might we be missing in our safety systems?" — the generative mindset'}};
+  const c=lC[lvl.label]||lC['Reactive'];
+  let weakDimHtml='';weakDims.forEach(d=>{const dl=hudsonLevel(d.avg);const nextL=d.avg<2?'Reactive':d.avg<3?'Calculative':d.avg<4?'Proactive':'Generative';const gap=(Math.min(d.avg<2?2:d.avg<3?3:d.avg<4?4:d.avg<4.5?4.5:5,5)-d.avg).toFixed(2);let qRows=QUESTIONS.filter(q=>q.s===d.i).sort((a,b)=>(qAvgs[a.id]||0)-(qAvgs[b.id]||0)).slice(0,3).map(q=>{const v=qAvgs[q.id];return`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--border);font-size:12px;"><span style="color:var(--text2);">${q.title}</span><span style="font-weight:600;color:${scoreTextColor(v)};">${v?v.toFixed(1):'—'}</span></div>`;}).join('');weakDimHtml+=`<div class="card" style="border-left:3px solid ${dl.color};margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:6px;"><h3>${d.name}</h3>${levelBadge(d.avg)}</div><p style="font-size:13px;color:var(--text2);margin-bottom:8px;">${gap} points to ${nextL}:</p>${qRows}</div>`;});
   const prioHtml=c.priorities.map((p,i)=>`<div style="display:flex;gap:12px;margin-bottom:12px;"><div style="width:24px;height:24px;border-radius:50%;background:${lvl.bg};color:${lvl.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;">${i+1}</div><p style="font-size:13px;color:var(--text2);line-height:1.65;">${p}</p></div>`).join('');
   const charHtml=c.chars.map(ch=>`<li style="margin-bottom:6px;color:var(--text2);font-size:13px;">${ch}</li>`).join('');
-
-  el.innerHTML=`
-    <div class="card" style="border-left:3px solid ${lvl.color};"><h3 style="margin-bottom:6px;">Current state: ${lvl.label}</h3><p style="font-size:13px;line-height:1.7;color:var(--text2);margin-bottom:12px;">${c.summary}</p><ul style="padding-left:16px;margin-bottom:12px;">${charHtml}</ul><div style="background:${lvl.bg};border-radius:6px;padding:10px 14px;font-size:13px;color:${lvl.color};font-style:italic;">${c.quote}</div></div>
-    <div class="card"><h3 style="margin-bottom:4px;">Response consistency</h3><div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-top:8px;"><div class="metric" style="flex:0 0 auto;min-width:100px;"><div class="m-label">Std deviation</div><div class="m-value" style="font-size:20px;">${stdDev.toFixed(2)}</div><div class="m-sub">${stdDev<0.5?'High':stdDev<1?'Moderate':'Low'} consistency</div></div><p style="font-size:13px;color:var(--text2);line-height:1.65;flex:1;margin-top:4px;">${consistencyMsg}</p></div></div>
-    <div class="card"><h3 style="margin-bottom:10px;">Recommended priority actions</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">Based on your current maturity level (${lvl.label}), these are the evidence-based priorities for moving to the next level.</p>${prioHtml}</div>
-    <h3 style="margin-bottom:10px;">Weakest dimensions — focus areas</h3>${weakDimHtml}
-    <div class="card"><h3 style="margin-bottom:10px;">Strongest dimensions — build on these</h3><p class="muted" style="font-size:13px;margin-bottom:10px;">Use these as proof points and extend their practices to weaker dimensions.</p>${strengthHtml}</div>
-    <div class="card" style="background:var(--bg2);"><h3 style="margin-bottom:10px;">What to do next</h3><div style="font-size:13px;color:var(--text2);line-height:1.9;"><p>1️⃣ <strong>Share these results</strong> with leadership — safety culture improvement must be led from the top.</p><p>2️⃣ <strong>Run team conversations</strong> using the dimension breakdown to understand what's driving low scores.</p><p>3️⃣ <strong>Build an action plan</strong> targeting the top 3 weakest dimensions with owners, timescales and review dates.</p><p>4️⃣ <strong>Re-survey in 12–18 months</strong> to measure progress — reset and repeat.</p><p>5️⃣ <strong>Avoid the calculative trap</strong> — data is only useful if it drives genuine behaviour change, not just reporting.</p></div></div>`;
+  const consistencyMsg=stdDev<.5?'Responses are highly consistent — broad agreement across the team.'
+    :stdDev<1?'Moderate variation — different parts of the team may be experiencing safety culture differently.'
+    :'High variation — significant differences in safety culture experience. Structured conversations are recommended.';
+  el.innerHTML=`<div class="card" style="border-left:3px solid ${lvl.color};"><h3 style="margin-bottom:6px;">Current state: ${lvl.label}</h3><p style="font-size:13px;line-height:1.7;color:var(--text2);margin-bottom:12px;">${c.summary}</p><ul style="padding-left:16px;margin-bottom:12px;">${charHtml}</ul><div style="background:${lvl.bg};border-radius:6px;padding:10px 14px;font-size:13px;color:${lvl.color};font-style:italic;">${c.quote}</div></div>
+  <div class="card"><h3 style="margin-bottom:4px;">Response consistency</h3><div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-top:8px;"><div class="metric" style="flex:0 0 auto;min-width:100px;"><div class="m-label">Std deviation</div><div class="m-value" style="font-size:20px;">${stdDev.toFixed(2)}</div><div class="m-sub">${stdDev<.5?'High':stdDev<1?'Moderate':'Low'} consistency</div></div><p style="font-size:13px;color:var(--text2);line-height:1.65;flex:1;margin-top:4px;">${consistencyMsg}</p></div></div>
+  <div class="card"><h3 style="margin-bottom:10px;">Priority actions</h3>${prioHtml}</div>
+  <h3 style="margin-bottom:10px;">Weakest dimensions</h3>${weakDimHtml}
+  <div class="card"><h3 style="margin-bottom:10px;">Strongest dimensions</h3>${strongDims.map(d=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;">${d.name}</span>${levelBadge(d.avg)}</div>`).join('')}</div>
+  <div class="card" style="background:var(--bg2);"><h3 style="margin-bottom:8px;">What to do next</h3><div style="font-size:13px;color:var(--text2);line-height:1.9;"><p>1️⃣ <strong>Share results</strong> with leadership — improvement must be led from the top.</p><p>2️⃣ <strong>Run team conversations</strong> using the dimension breakdown to understand drivers.</p><p>3️⃣ <strong>Build an action plan</strong> targeting the top 3 weakest dimensions with owners and timescales.</p><p>4️⃣ <strong>Re-run the survey next quarter</strong> — create a new campaign and compare results in the Trends tab.</p><p>5️⃣ <strong>Avoid the calculative trap</strong> — data only helps if it drives genuine behaviour change.</p></div></div>`;
 }
 
+// ── RESPONDENTS & COMMENTS ────────────────────────────────────────────────────
 function renderRespondents(responses){
   const el=document.getElementById('tab-respondents');
-  if(!responses.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No respondents yet.</p></div>';return;}
-  let rows='';[...responses].reverse().forEach(r=>{const d=new Date(r.created_at);rows+=`<div class="resp-row"><div>${teamBadge(r.team)}</div><div style="display:flex;align-items:center;gap:8px;">${levelBadge(r.avg_score)}<span class="small">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} ${d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span></div></div>`;});
+  if(!responses.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No respondents.</p></div>';return;}
+  let rows='';[...responses].reverse().forEach(r=>{const d=new Date(r.created_at);rows+=`<div class="resp-row"><div style="display:flex;align-items:center;gap:8px;">${teamBadge(r.team)}<span style="font-size:12px;color:var(--text3);">${r.campaign_name||''}</span></div><div style="display:flex;align-items:center;gap:8px;">${levelBadge(r.avg_score)}<span class="small">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span></div></div>`;});
   el.innerHTML=`<div class="card">${rows}</div>`;
 }
-
 function renderComments(responses){
   const el=document.getElementById('tab-comments');const wc=responses.filter(r=>r.comment);
-  if(!wc.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No comments submitted.</p></div>';return;}
-  let items='';[...wc].reverse().forEach(r=>{const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});items+=`<div class="comment-item"><div class="comment-meta">${teamBadge(r.team)} · ${date}</div><div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div></div>`;});
+  if(!wc.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No comments.</p></div>';return;}
+  let items='';[...wc].reverse().forEach(r=>{const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});items+=`<div class="comment-item"><div class="comment-meta">${teamBadge(r.team)} · ${r.campaign_name||''} · ${date}</div><div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div></div>`;});
   el.innerHTML=`<div class="card">${items}</div>`;
 }
 
+// ── Tabs & filters ────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   });
 });
-
-document.getElementById('filter-team').addEventListener('change',()=>renderAdmin(allResponses));
+document.getElementById('filter-campaign').addEventListener('change',()=>renderAdmin());
+document.getElementById('filter-team').addEventListener('change',()=>renderAdmin());
 document.getElementById('btn-refresh').addEventListener('click',loadAdminView);
-document.getElementById('btn-clear-lock').addEventListener('click',()=>{
-  localStorage.removeItem(LS_SUBMITTED);
-  alert('Submission lock cleared on this device. This person can now resubmit.');
-});
 document.getElementById('btn-logout').addEventListener('click',()=>{
   document.getElementById('login-team').value='';document.getElementById('login-pass').value='';
   document.getElementById('login-error').style.display='none';showScreen('login');
 });
-document.getElementById('btn-clear').addEventListener('click',async()=>{
-  if(!confirm('This will permanently delete ALL survey responses. Are you sure?'))return;
-  try{await dbDeleteAll();allResponses=[];loadAdminView();}catch(e){alert('Failed: '+e.message);}
-});
+
+// ── Export CSV ────────────────────────────────────────────────────────────────
 document.getElementById('btn-export').addEventListener('click',()=>{
-  if(!allResponses.length){alert('No data to export.');return;}
-  const headers=['Team','Date','Time','Overall Score','Hudson Level',...SECTIONS.map(s=>s.replace(/,/g,';')),'Comment'];
-  const rows=allResponses.map(r=>{
-    const d=new Date(r.created_at);
-    const dims=SECTIONS.map((_,idx)=>r.dim_avgs[idx]?parseFloat(r.dim_avgs[idx]).toFixed(2):'');
-    return[r.team,d.toLocaleDateString('en-GB'),d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),r.avg_score.toFixed(2),hudsonLevel(r.avg_score).label,...dims,'"'+(r.comment||'').replace(/"/g,'""')+'"'].join(',');
-  });
+  const responses=getFilteredResponses();
+  if(!responses.length){alert('No data to export.');return;}
+  const headers=['Campaign','Team','Date','Overall Score','Hudson Level',...SECTIONS.map(s=>s.replace(/,/g,';')),'Comment'];
+  const rows=responses.map(r=>{const d=new Date(r.created_at);const dims=SECTIONS.map((_,idx)=>r.dim_avgs[idx]?parseFloat(r.dim_avgs[idx]).toFixed(2):'');return[r.campaign_name||'',r.team,d.toLocaleDateString('en-GB'),r.avg_score.toFixed(2),hudsonLevel(r.avg_score).label,...dims,'"'+(r.comment||'').replace(/"/g,'""')+'"'].join(',');});
   const csv=[headers.join(','),...rows].join('\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='hudson-survey-results.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='hudson-survey-results.csv';a.click();
 });
 </script>
 </body>
