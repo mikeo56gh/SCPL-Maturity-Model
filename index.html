@@ -278,12 +278,20 @@ create policy "Allow delete" on survey_responses
     <div id="admin-content" style="display:none;">
       <div class="tabs">
         <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="radar">Radar</button>
         <button class="tab-btn" data-tab="dimensions">Dimensions</button>
+        <button class="tab-btn" data-tab="heatmap">Question heatmap</button>
+        <button class="tab-btn" data-tab="teams">Team comparison</button>
+        <button class="tab-btn" data-tab="insights">Insights &amp; actions</button>
         <button class="tab-btn" data-tab="respondents">Respondents</button>
         <button class="tab-btn" data-tab="comments">Comments</button>
       </div>
       <div id="tab-overview" class="tab-panel active"></div>
+      <div id="tab-radar" class="tab-panel"></div>
       <div id="tab-dimensions" class="tab-panel"></div>
+      <div id="tab-heatmap" class="tab-panel"></div>
+      <div id="tab-teams" class="tab-panel"></div>
+      <div id="tab-insights" class="tab-panel"></div>
       <div id="tab-respondents" class="tab-panel"></div>
       <div id="tab-comments" class="tab-panel"></div>
     </div>
@@ -296,8 +304,8 @@ create policy "Allow delete" on survey_responses
 //  SUPABASE CONFIGURATION
 //  Replace these two values after setting up Supabase
 // ════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://zrfytqliqbnzdiyqmnte.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_MRjoINHWGVEbTx-siAeQ7g_MyA6_6J8';
+const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_URL_HERE';
+const SUPABASE_KEY = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
 const TABLE_NAME   = 'survey_responses';
 // ════════════════════════════════════════════════════
 
@@ -543,81 +551,201 @@ async function loadAdminView(){
 function renderAdmin(responses){
   const f=document.getElementById('filter-team').value;
   const filtered=f==='all'?responses:responses.filter(r=>r.team===f);
-  renderOverview(filtered);renderDimensions(filtered);renderRespondents(filtered);renderComments(filtered);
+  renderOverview(filtered);renderRadar(filtered);renderDimensions(filtered);
+  renderHeatmap(filtered);renderTeamComparison(responses);
+  renderInsights(filtered);renderRespondents(filtered);renderComments(filtered);
 }
+
+function calcDimAvgs(responses){
+  const totals={},counts={};
+  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{totals[k]=(totals[k]||0)+r.dim_avgs[k];counts[k]=(counts[k]||0)+1;});});
+  const out={};SECTIONS.forEach((_,i)=>{out[i]=counts[i]?totals[i]/counts[i]:null;});return out;
+}
+function calcQAvgs(responses){
+  const out={};
+  QUESTIONS.forEach(q=>{const s=responses.map(r=>r.answers?r.answers[q.id]:null).filter(Boolean);out[q.id]=s.length?s.reduce((a,b)=>a+b,0)/s.length:null;});
+  return out;
+}
+function scoreColor(v){if(v===null)return'var(--border)';if(v<2)return'#fcebeb';if(v<3)return'#faeeda';if(v<4)return'#e6f1fb';if(v<4.5)return'#eaf3de';return'#e1f5ee';}
+function scoreTextColor(v){if(v===null)return'var(--text3)';if(v<2)return'#a32d2d';if(v<3)return'#854f0b';if(v<4)return'#185fa5';if(v<4.5)return'#3b6d11';return'#0f6e56';}
 
 function renderOverview(responses){
   const el=document.getElementById('tab-overview');
   if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
   const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
   const lvl=hudsonLevel(overall);
+  const nextScore=overall<2?2:overall<3?3:overall<4?4:overall<4.5?4.5:5;
+  const gap=(nextScore-overall).toFixed(2);
+  const nextLabel=overall<2?'Reactive':overall<3?'Calculative':overall<4?'Proactive':overall<4.5?'Generative':'Generative';
+  const bands=[0,0,0,0,0];
+  responses.forEach(r=>{const i=Math.min(4,Math.max(0,Math.floor(r.avg_score-0.001)));bands[i]++;});
+  const maxBand=Math.max(...bands,1);
+  const bLabels=['Pathological','Reactive','Calculative','Proactive','Generative'];
+  const bBg=['#fcebeb','#faeeda','#e6f1fb','#eaf3de','#e1f5ee'];
+  const bTc=['#a32d2d','#854f0b','#185fa5','#3b6d11','#0f6e56'];
+  let distBars='';
+  bands.forEach((n,i)=>{const pct=n/maxBand*100;distBars+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;"><span style="width:90px;color:var(--text2);text-align:right;">${bLabels[i]}</span><div style="flex:1;height:20px;background:var(--bg3);border-radius:3px;overflow:hidden;"><div style="width:${pct}%;height:100%;background:${bBg[i]};border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">${n>0?`<span style="font-size:11px;font-weight:700;color:${bTc[i]};">${n}</span>`:''}</div></div><span style="width:20px;color:var(--text3);font-size:12px;">${n}</span></div>`;});
   let teamRows='';
-  TEAMS.forEach(t=>{
-    const tr=responses.filter(r=>r.team===t);if(!tr.length)return;
-    const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;
-    teamRows+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;">${teamBadge(t)}<span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span><span style="margin-left:auto;">${levelBadge(ta)}</span></div>`;
-  });
-  const dimTotals={},dimCounts={};
-  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{dimTotals[k]=(dimTotals[k]||0)+r.dim_avgs[k];dimCounts[k]=(dimCounts[k]||0)+1;});});
+  TEAMS.forEach(t=>{const tr=responses.filter(r=>r.team===t);if(!tr.length)return;const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;teamRows+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;">${teamBadge(t)}<span style="margin-left:6px;color:var(--text2);">${tr.length} respondent${tr.length!==1?'s':''}</span><span style="margin-left:auto;">${levelBadge(ta)}</span></div>`;});
+  const dimAvgs=calcDimAvgs(responses);
   let dimBars='';
-  SECTIONS.forEach((name,idx)=>{
-    const avg=dimCounts[idx]?dimTotals[idx]/dimCounts[idx]:null;
-    dimBars+=`<div class="dim-row"><span style="flex:1;">${name}</span><div style="display:flex;align-items:center;gap:8px;">${avg?`<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;
-  });
-  el.innerHTML=`<div class="metric-grid"><div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div><div class="metric"><div class="m-label">Overall score</div><div class="m-value">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div></div>
-  <div class="card"><h3 style="margin-bottom:6px;">Hudson maturity level</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Average across all dimensions and respondents</p><span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span><div style="margin-top:12px;font-size:12px;color:var(--text2);">1–1.9 Pathological · 2–2.9 Reactive · 3–3.9 Calculative · 4–4.4 Proactive · 4.5–5 Generative</div>${teamRows?`<div style="margin-top:14px;border-top:0.5px solid var(--border);padding-top:10px;">${teamRows}</div>`:''}</div>
+  SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];dimBars+=`<div class="dim-row"><span style="flex:1;">${name}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:28px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});
+  el.innerHTML=`<div class="metric-grid"><div class="metric"><div class="m-label">Respondents</div><div class="m-value">${responses.length}</div><div class="m-sub">completed</div></div><div class="metric"><div class="m-label">Overall score</div><div class="m-value" style="color:${lvl.color};">${overall.toFixed(2)}</div><div class="m-sub">${lvl.label}</div></div><div class="metric"><div class="m-label">Gap to next level</div><div class="m-value">${gap}</div><div class="m-sub">points to ${nextLabel}</div></div></div>
+  <div class="card"><h3 style="margin-bottom:8px;">Current maturity level</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;"><span style="display:inline-block;padding:8px 20px;border-radius:6px;font-size:16px;font-weight:700;background:${lvl.bg};color:${lvl.color};">${lvl.label}</span>${overall<5?`<span style="font-size:13px;color:var(--text2);">Next: <strong>${nextLabel}</strong> — ${gap} points away</span>`:''}</div><div style="margin-bottom:6px;font-size:12px;color:var(--text2);">Progress to Generative</div><div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:10px;"><div style="width:${(overall/5*100).toFixed(1)}%;height:100%;background:${lvl.color};border-radius:4px;"></div></div><div style="font-size:12px;color:var(--text2);">1–1.9 Pathological · 2–2.9 Reactive · 3–3.9 Calculative · 4–4.4 Proactive · 4.5–5 Generative</div>${teamRows?`<div style="margin-top:14px;border-top:0.5px solid var(--border);padding-top:10px;">${teamRows}</div>`:''}</div>
+  <div class="card"><h3 style="margin-bottom:10px;">Response distribution</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">How individual scores are spread across maturity levels</p>${distBars}</div>
   <div class="card"><h3 style="margin-bottom:12px;">Score by dimension</h3>${dimBars}</div>`;
+}
+
+function renderRadar(responses){
+  const el=document.getElementById('tab-radar');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  const dimAvgs=calcDimAvgs(responses);
+  const data=SECTIONS.map((_,i)=>dimAvgs[i]||0);
+  const n=9,cx=170,cy=170,r=120;
+  const angleStep=2*Math.PI/n;
+  function pt(val,i){const a=i*angleStep-Math.PI/2,rv=r*(val/5);return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
+  function ptL(i){const a=i*angleStep-Math.PI/2,rv=r+30;return{x:cx+rv*Math.cos(a),y:cy+rv*Math.sin(a)};}
+  let rings='';
+  [1,2,3,4,5].forEach(v=>{const pts=Array.from({length:n},(_,i)=>pt(v,i));const d=pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';rings+=`<path d="${d}" fill="none" stroke="var(--border)" stroke-width="${v===4?1.5:0.5}" stroke-dasharray="${v===4?'4,3':''}"/><text x="${(cx+r*(v/5)+4).toFixed(1)}" y="${(cy+3).toFixed(1)}" font-size="9" fill="var(--text3)">${v}</text>`;});
+  let spokes='';for(let i=0;i<n;i++){const p=pt(5,i);spokes+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="var(--border)" stroke-width="0.5"/>`;}
+  const dpts=data.map((v,i)=>pt(Math.max(v,0.1),i));
+  const dpoly=dpts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';
+  const avgForColor=data.filter(v=>v>0).reduce((a,b)=>a+b,0)/data.filter(v=>v>0).length||1;
+  const cl=hudsonLevel(avgForColor);
+  let lbls='';
+  SECTIONS.forEach((s,i)=>{const p=ptL(i);const words=s.split(' ');const lines=[];let cur='';words.forEach(w=>{if((cur+' '+w).trim().length>13){lines.push(cur.trim());cur=w;}else cur=(cur+' '+w).trim();});if(cur)lines.push(cur);const lh=11,sy=p.y-(lines.length-1)*lh/2;lines.forEach((ln,li)=>{lbls+=`<text x="${p.x.toFixed(1)}" y="${(sy+li*lh).toFixed(1)}" text-anchor="middle" font-size="9" fill="var(--text2)">${ln}</text>`;});});
+  let dots='';dpts.forEach((p,i)=>{dots+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${scoreTextColor(data[i])}" stroke="var(--bg)" stroke-width="1.5"/>`;});
+  const svg=`<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;margin:0 auto;">${rings}${spokes}<path d="${dpoly}" fill="${cl.bg}" fill-opacity="0.55" stroke="${cl.color}" stroke-width="2"/>${dots}${lbls}</svg>`;
+
+  let barHtml='';
+  SECTIONS.forEach((name,idx)=>{const avg=dimAvgs[idx];if(avg===null)return;const gap=Math.max(0,4.0-avg);const pct=(avg/5*100).toFixed(1);barHtml+=`<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>${name}</span><span style="font-weight:600;color:${scoreTextColor(avg)};">${avg.toFixed(2)} <span style="font-weight:400;color:var(--text3);font-size:12px;">${avg<4?'gap to proactive: '+gap.toFixed(2):'✓ at proactive threshold'}</span></span></div><div style="height:10px;background:var(--bg3);border-radius:5px;overflow:visible;position:relative;"><div style="width:${pct}%;height:100%;background:${scoreTextColor(avg)};border-radius:5px;opacity:0.8;"></div><div style="position:absolute;top:-3px;left:${(4/5*100).toFixed(1)}%;width:2px;height:16px;background:var(--text2);border-radius:1px;" title="Proactive threshold (4.0)"></div></div></div>`;});
+
+  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Radar — dimension scores</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">Each axis represents one dimension (1=centre, 5=outer). The dashed ring marks the Proactive threshold (4.0).</p>${svg}</div><div class="card"><h3 style="margin-bottom:4px;">Gap to Proactive threshold (4.0)</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">The vertical line marks score 4.0 — the minimum for Proactive. Bars to the left of the line need improvement.</p>${barHtml}</div>`;
 }
 
 function renderDimensions(responses){
   const el=document.getElementById('tab-dimensions');
   if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
-  const dimTotals={},dimCounts={};
-  responses.forEach(r=>{Object.keys(r.dim_avgs||{}).forEach(k=>{dimTotals[k]=(dimTotals[k]||0)+r.dim_avgs[k];dimCounts[k]=(dimCounts[k]||0)+1;});});
+  const dimAvgs=calcDimAvgs(responses);const qAvgs=calcQAvgs(responses);
   let html='';
   SECTIONS.forEach((name,idx)=>{
-    const dimAvg=dimCounts[idx]?dimTotals[idx]/dimCounts[idx]:null;
-    const lvlD=dimAvg?hudsonLevel(dimAvg):null;
+    const dimAvg=dimAvgs[idx];const lvlD=dimAvg!=null?hudsonLevel(dimAvg):null;
     let qRows='';
-    QUESTIONS.filter(q=>q.s===idx).forEach(q=>{
-      const qScores=responses.map(r=>r.answers?r.answers[q.id]:null).filter(Boolean);
-      const qAvg=qScores.length?qScores.reduce((a,b)=>a+b,0)/qScores.length:null;
-      qRows+=`<div class="dim-row" style="font-size:13px;"><span style="flex:1;color:var(--text2);">${q.title}</span><div style="display:flex;align-items:center;gap:8px;">${qAvg?`<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${qAvg/5*100}%"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;">${qAvg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;
-    });
+    QUESTIONS.filter(q=>q.s===idx).forEach(q=>{const avg=qAvgs[q.id];qRows+=`<div class="dim-row" style="font-size:13px;"><span style="flex:1;color:var(--text2);">${q.title}</span><div style="display:flex;align-items:center;gap:8px;">${avg!=null?`<div class="bar-wrap" style="width:70px;"><div class="bar-fill" style="width:${avg/5*100}%;background:${scoreTextColor(avg)};"></div></div><span style="font-size:13px;font-weight:600;min-width:26px;text-align:right;color:${scoreTextColor(avg)};">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</div></div>`;});
     html+=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;"><h3>${name}</h3>${lvlD?levelBadge(dimAvg):''}</div>${qRows}</div>`;
   });
   el.innerHTML=html;
 }
 
+function renderHeatmap(responses){
+  const el=document.getElementById('tab-heatmap');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  const qAvgs=calcQAvgs(responses);
+  const sorted=[...QUESTIONS].filter(q=>qAvgs[q.id]!=null).sort((a,b)=>qAvgs[a.id]-qAvgs[b.id]);
+  const weakest=sorted.slice(0,5);const strongest=sorted.slice(-5).reverse();
+  let heatRows='';
+  SECTIONS.forEach((sname,sidx)=>{
+    const sQs=QUESTIONS.filter(q=>q.s===sidx);
+    heatRows+=`<tr><td style="font-size:11px;color:var(--text2);padding:4px 8px 4px 0;white-space:nowrap;vertical-align:middle;border-bottom:0.5px solid var(--border);max-width:120px;">${sname}</td>`;
+    sQs.forEach(q=>{const v=qAvgs[q.id];heatRows+=`<td title="${q.title}: ${v?v.toFixed(2):'n/a'}" style="width:34px;height:30px;background:${scoreColor(v)};text-align:center;font-size:11px;font-weight:700;color:${scoreTextColor(v)};border:1px solid var(--bg);border-radius:3px;cursor:default;">${v?v.toFixed(1):'—'}</td>`;});
+    heatRows+='</tr>';
+  });
+  let weakHtml='',strongHtml='';
+  weakest.forEach(q=>{const v=qAvgs[q.id];weakHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};white-space:nowrap;">${v.toFixed(2)}</span></div>`;});
+  strongest.forEach(q=>{const v=qAvgs[q.id];strongHtml+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;color:var(--text2);">${q.title}<br><span style="font-size:11px;color:var(--text3);">${SECTIONS[q.s]}</span></span><span style="font-weight:700;color:${scoreTextColor(v)};white-space:nowrap;">${v.toFixed(2)}</span></div>`;});
+  const legendPips=['Pathological','Reactive','Calculative','Proactive','Generative'].map((l,i)=>{const c=[['#fcebeb','#a32d2d'],['#faeeda','#854f0b'],['#e6f1fb','#185fa5'],['#eaf3de','#3b6d11'],['#e1f5ee','#0f6e56']];return`<span style="background:${c[i][0]};color:${c[i][1]};padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600;">${l}</span>`;}).join('');
+  el.innerHTML=`<div class="card"><h3 style="margin-bottom:4px;">Question heatmap</h3><p class="muted" style="font-size:13px;margin-bottom:12px;">Each cell = average score for that question. Hover for question name. Colour = maturity level.</p><div style="overflow-x:auto;"><table style="border-collapse:separate;border-spacing:2px;">${heatRows}</table></div><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:11px;color:var(--text3);">Scale:</span>${legendPips}</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="card"><h3 style="margin-bottom:4px;color:#a32d2d;">▼ Priority areas</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 lowest-scoring questions</p>${weakHtml}</div>
+    <div class="card"><h3 style="margin-bottom:4px;color:#0f6e56;">▲ Strengths</h3><p class="muted" style="font-size:12px;margin-bottom:10px;">5 highest-scoring questions</p>${strongHtml}</div>
+  </div>`;
+}
+
+function renderTeamComparison(responses){
+  const el=document.getElementById('tab-teams');
+  const teamsWithData=TEAMS.filter(t=>responses.some(r=>r.team===t));
+  if(!teamsWithData.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  let overallCards='';
+  teamsWithData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const ta=tr.reduce((a,r)=>a+r.avg_score,0)/tr.length;const tl=hudsonLevel(ta);overallCards+=`<div class="metric" style="border-left:3px solid ${tl.color};"><div class="m-label">${teamBadge(t)} · ${tr.length} resp.</div><div class="m-value" style="color:${tl.color};">${ta.toFixed(2)}</div><div class="m-sub">${tl.label}</div></div>`;});
+  let dimTable=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr><th style="text-align:left;padding:6px 4px;color:var(--text2);font-weight:500;border-bottom:0.5px solid var(--border);">Dimension</th>`;
+  teamsWithData.forEach(t=>{dimTable+=`<th style="text-align:center;padding:6px 8px;border-bottom:0.5px solid var(--border);">${teamBadge(t)}</th>`;});
+  dimTable+='</tr></thead><tbody>';
+  SECTIONS.forEach((name,idx)=>{
+    dimTable+=`<tr><td style="padding:7px 4px;border-bottom:0.5px solid var(--border);color:var(--text2);font-size:13px;">${name}</td>`;
+    teamsWithData.forEach(t=>{const tr=responses.filter(r=>r.team===t);const scores=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);const avg=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:null;dimTable+=`<td style="text-align:center;padding:7px 8px;border-bottom:0.5px solid var(--border);">${avg!=null?`<span style="font-weight:700;color:${scoreTextColor(avg)};background:${scoreColor(avg)};padding:2px 8px;border-radius:4px;">${avg.toFixed(1)}</span>`:'<span class="small">—</span>'}</td>`;});
+    dimTable+='</tr>';
+  });
+  dimTable+='</tbody></table>';
+  let varianceHtml='';
+  if(teamsWithData.length>1){
+    const varData=[];
+    SECTIONS.forEach((name,idx)=>{const avgs=teamsWithData.map(t=>{const tr=responses.filter(r=>r.team===t);const sc=tr.map(r=>r.dim_avgs&&r.dim_avgs[idx]).filter(v=>v!=null);return sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null;}).filter(v=>v!=null);if(avgs.length>1)varData.push({name,spread:Math.max(...avgs)-Math.min(...avgs)});});
+    varData.sort((a,b)=>b.spread-a.spread);
+    if(varData.length){varianceHtml=`<div class="card"><h3 style="margin-bottom:4px;">Largest gaps between teams</h3><p class="muted" style="font-size:13px;margin-bottom:10px;">Dimensions where teams differ most — may need team-specific interventions rather than a single approach.</p>`;varData.slice(0,5).forEach(d=>{varianceHtml+=`<div class="dim-row"><span style="flex:1;font-size:13px;">${d.name}</span><span style="font-size:13px;font-weight:600;color:${d.spread>1?'#a32d2d':d.spread>0.5?'#854f0b':'#3b6d11'};">Δ ${d.spread.toFixed(2)}</span></div>`;});varianceHtml+='</div>';}
+  }
+  el.innerHTML=`<div class="metric-grid">${overallCards}</div><div class="card"><h3 style="margin-bottom:12px;">Dimension scores by team</h3>${dimTable}</div>${varianceHtml}`;
+}
+
+function renderInsights(responses){
+  const el=document.getElementById('tab-insights');
+  if(!responses.length){el.innerHTML='<p class="muted" style="padding:1rem 0;">No responses yet.</p>';return;}
+  const overall=responses.reduce((a,r)=>a+r.avg_score,0)/responses.length;
+  const lvl=hudsonLevel(overall);
+  const dimAvgs=calcDimAvgs(responses);
+  const qAvgs=calcQAvgs(responses);
+  const dimRanked=SECTIONS.map((name,i)=>({name,i,avg:dimAvgs[i]||0})).sort((a,b)=>a.avg-b.avg);
+  const weakDims=dimRanked.slice(0,3);const strongDims=dimRanked.slice(-3).reverse();
+  const scores=responses.map(r=>r.avg_score);
+  const mean=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const stdDev=Math.sqrt(scores.reduce((a,b)=>a+(b-mean)**2,0)/scores.length);
+  const consistencyMsg=stdDev<0.5?'Responses are highly consistent — broad agreement across the team about the current safety culture level.'
+    :stdDev<1.0?'Moderate variation suggests different parts of the team may be experiencing safety culture differently. Review team-level breakdowns.'
+    :'High variation indicates significant differences in safety culture experience across the team. Structured conversations are recommended to understand the gaps.';
+
+  const levelContent={
+    'Pathological':{summary:'The organisation is at the earliest stage of safety culture. Safety is not yet a business priority and reactive responses dominate.',chars:['Incidents hidden or minimised','Leadership rarely engages with safety','Workers fear reporting problems','No consistent safety systems in place'],priorities:['Establish visible leadership commitment — senior leaders must personally and consistently signal that safety matters','Create a reporting system where workers can raise concerns without fear of punishment','Implement basic safety procedures and ensure they are clearly communicated to all','Begin tracking incident and near-miss data to establish a baseline'],quote:'"The most important ingredient in moving up the ladder is the commitment and actions of leadership." — Hudson'},
+    'Reactive':{summary:'The organisation responds to safety events but does not yet anticipate or prevent them. Safety culture is emerging but relies on incidents as triggers for action.',chars:['Safety action driven by incidents rather than prevention','Leadership engaged after events, not before','Workers aware of safety but not empowered to act','Procedures exist but compliance is inconsistent'],priorities:['Shift from incident-response to hazard anticipation — implement proactive hazard identification','Build psychological safety so workers report near-misses without fear of blame','Develop structured investigation processes that find system causes, not individual blame','Invest in stop-work authority — ensure every worker knows they can and should stop unsafe work'],quote:'"Safety is important — we do a lot every time we have an accident." — Hudson'},
+    'Calculative':{summary:'Systems and processes are in place and safety data is tracked. The risk here is becoming stuck — having impressive metrics without genuine cultural engagement.',chars:['Safety managed through procedures and KPIs','Compliance-focused rather than care-focused','Workers fulfil obligations without genuine belief in safety value','Risk of the "calculative trap" — data without behaviour change'],priorities:['Move beyond compliance — create forums where workers genuinely discuss and solve safety problems','Strengthen workforce engagement: workers should co-design safety improvements, not just follow rules','Focus investigations on systemic causes — break the pattern of individual blame','Shift to leading indicators (near-miss rates, hazard reports) not just lagging ones (injury rates)'],quote:'"Many organisations become stuck at the calculative level — like tracking health metrics but never making lifestyle changes." — Cairn Risk, 2025'},
+    'Proactive':{summary:'Safety is embedded in operations and the organisation actively anticipates risk. The focus should be on sustaining this and driving toward full integration.',chars:['Workers actively identify and report hazards','Leadership visible and genuinely engaged','Safety considered in all major decisions','Learning from near-misses is routine'],priorities:['Build chronic unease — high-performing organisations never assume everything is safe, even when performance appears good','Extend this culture to contractors — ensure they operate to the same standard, not a lower one','Develop safety leadership capability at all levels, not just in the safety team','Implement regular re-surveys (every 12–18 months) to track cultural progress'],quote:'"A balanced approach is taken to all risks — how can we help you make your job safer?" — Cairn Risk, 2025'},
+    'Generative':{summary:'Safety is fully integrated into how the organisation operates. This represents best-in-class safety culture. The focus is on sustaining and continuously challenging this standard.',chars:['Safety indistinguishable from how work gets done','Chronic unease maintained even during periods of good performance','Workers at all levels lead safety improvement','Learning shared rapidly across the whole organisation'],priorities:['Maintain vigilance — guard against complacency and the assumption that past success eliminates future risk','Share learning externally — contribute to industry-wide knowledge','Mentor teams at lower maturity levels within the organisation','Continue to survey and benchmark — culture can regress without active maintenance'],quote:'"What might we be missing in our safety systems?" — the generative mindset'}
+  };
+  const c=levelContent[lvl.label]||levelContent['Reactive'];
+
+  let weakDimHtml='';
+  weakDims.forEach(d=>{
+    const dl=hudsonLevel(d.avg);const nextL=d.avg<2?'Reactive':d.avg<3?'Calculative':d.avg<4?'Proactive':d.avg<4.5?'Generative':'Generative';const gap=(Math.min(d.avg<2?2:d.avg<3?3:d.avg<4?4:d.avg<4.5?4.5:5,5)-d.avg).toFixed(2);
+    let qRows=QUESTIONS.filter(q=>q.s===d.i).sort((a,b)=>(qAvgs[a.id]||0)-(qAvgs[b.id]||0)).slice(0,3).map(q=>{const v=qAvgs[q.id];return`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px;"><span style="color:var(--text2);">${q.title}</span><span style="font-weight:600;color:${scoreTextColor(v)};">${v?v.toFixed(1):'—'}</span></div>`;}).join('');
+    weakDimHtml+=`<div class="card" style="border-left:3px solid ${dl.color};margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:6px;"><h3>${d.name}</h3>${levelBadge(d.avg)}</div><p style="font-size:13px;color:var(--text2);margin-bottom:8px;">${gap} points to ${nextL}. Focus on lowest-scoring questions first:</p>${qRows}</div>`;
+  });
+
+  let strengthHtml=strongDims.map(d=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px;gap:8px;"><span style="flex:1;">${d.name}</span>${levelBadge(d.avg)}</div>`).join('');
+
+  const prioHtml=c.priorities.map((p,i)=>`<div style="display:flex;gap:12px;margin-bottom:12px;"><div style="width:24px;height:24px;border-radius:50%;background:${lvl.bg};color:${lvl.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;">${i+1}</div><p style="font-size:13px;color:var(--text2);line-height:1.65;">${p}</p></div>`).join('');
+  const charHtml=c.chars.map(ch=>`<li style="margin-bottom:6px;color:var(--text2);font-size:13px;">${ch}</li>`).join('');
+
+  el.innerHTML=`
+    <div class="card" style="border-left:3px solid ${lvl.color};"><h3 style="margin-bottom:6px;">Current state: ${lvl.label}</h3><p style="font-size:13px;line-height:1.7;color:var(--text2);margin-bottom:12px;">${c.summary}</p><ul style="padding-left:16px;margin-bottom:12px;">${charHtml}</ul><div style="background:${lvl.bg};border-radius:6px;padding:10px 14px;font-size:13px;color:${lvl.color};font-style:italic;">${c.quote}</div></div>
+    <div class="card"><h3 style="margin-bottom:4px;">Response consistency</h3><div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-top:8px;"><div class="metric" style="flex:0 0 auto;min-width:100px;"><div class="m-label">Std deviation</div><div class="m-value" style="font-size:20px;">${stdDev.toFixed(2)}</div><div class="m-sub">${stdDev<0.5?'High':stdDev<1?'Moderate':'Low'} consistency</div></div><p style="font-size:13px;color:var(--text2);line-height:1.65;flex:1;margin-top:4px;">${consistencyMsg}</p></div></div>
+    <div class="card"><h3 style="margin-bottom:10px;">Recommended priority actions</h3><p class="muted" style="font-size:13px;margin-bottom:14px;">Based on your current maturity level (${lvl.label}), these are the evidence-based priorities for moving to the next level.</p>${prioHtml}</div>
+    <h3 style="margin-bottom:10px;">Weakest dimensions — focus areas</h3>${weakDimHtml}
+    <div class="card"><h3 style="margin-bottom:10px;">Strongest dimensions — build on these</h3><p class="muted" style="font-size:13px;margin-bottom:10px;">Use these as proof points and extend their practices to weaker dimensions.</p>${strengthHtml}</div>
+    <div class="card" style="background:var(--bg2);"><h3 style="margin-bottom:10px;">What to do next</h3><div style="font-size:13px;color:var(--text2);line-height:1.9;"><p>1️⃣ <strong>Share these results</strong> with leadership — safety culture improvement must be led from the top.</p><p>2️⃣ <strong>Run team conversations</strong> using the dimension breakdown to understand what's driving low scores.</p><p>3️⃣ <strong>Build an action plan</strong> targeting the top 3 weakest dimensions with owners, timescales and review dates.</p><p>4️⃣ <strong>Re-survey in 12–18 months</strong> to measure progress — reset and repeat.</p><p>5️⃣ <strong>Avoid the calculative trap</strong> — data is only useful if it drives genuine behaviour change, not just reporting.</p></div></div>`;
+}
+
 function renderRespondents(responses){
   const el=document.getElementById('tab-respondents');
   if(!responses.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No respondents yet.</p></div>';return;}
-  let rows='';
-  [...responses].reverse().forEach(r=>{
-    const d=new Date(r.created_at);
-    const date=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-    const time=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    rows+=`<div class="resp-row"><div>${teamBadge(r.team)}</div><div style="display:flex;align-items:center;gap:8px;">${levelBadge(r.avg_score)}<span class="small">${date} ${time}</span></div></div>`;
-  });
+  let rows='';[...responses].reverse().forEach(r=>{const d=new Date(r.created_at);rows+=`<div class="resp-row"><div>${teamBadge(r.team)}</div><div style="display:flex;align-items:center;gap:8px;">${levelBadge(r.avg_score)}<span class="small">${d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} ${d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</span></div></div>`;});
   el.innerHTML=`<div class="card">${rows}</div>`;
 }
 
 function renderComments(responses){
-  const el=document.getElementById('tab-comments');
-  const wc=responses.filter(r=>r.comment);
+  const el=document.getElementById('tab-comments');const wc=responses.filter(r=>r.comment);
   if(!wc.length){el.innerHTML='<div class="card"><p class="muted" style="font-size:13px;">No comments submitted.</p></div>';return;}
-  let items='';
-  [...wc].reverse().forEach(r=>{
-    const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-    items+=`<div class="comment-item"><div class="comment-meta">${teamBadge(r.team)} · ${date}</div><div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div></div>`;
-  });
+  let items='';[...wc].reverse().forEach(r=>{const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});items+=`<div class="comment-item"><div class="comment-meta">${teamBadge(r.team)} · ${date}</div><div class="comment-body">${r.comment.replace(/</g,'&lt;')}</div></div>`;});
   el.innerHTML=`<div class="card">${items}</div>`;
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   });
